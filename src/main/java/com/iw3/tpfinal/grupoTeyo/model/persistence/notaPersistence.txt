@@ -9,3 +9,6 @@ Clase 2025-8-26 --> Parte 2 minuto 43:35
 
 
 Recordemos que a JPA podemos pasarle una clase "Sort" que podemos parametrizar (creo que para ordenar lo que pidamos)
+
+
+1) Capa de persistencia - 2) Capa de negocio - 3) Capa WEB (No se entera de que existe una capa de persistencia)
