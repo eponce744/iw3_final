@@ -1,0 +1,11 @@
+JPArepository ya me busca en todas las clases por su ID, pero en caso de querer buscar en una clase
+y filtrar por alguno de sus atributos (de forma mucho mas rápida), se debe agregar en el repository con la nomemclatura: 
+
+* findByNombre_del_atributo --> IMPORTANTE QUE LA PRIMERA LETRA DEL ATRIBUTO SEA MAYÚSCULA
+
+¡IMPORTANTE! --> Para buscar por un atributo, ASEGURARSE QUE TENGA "unique=true" en la clase.
+
+Clase 2025-8-26 --> Parte 2 minuto 43:35
+
+
+Recordemos que a JPA podemos pasarle una clase "Sort" que podemos parametrizar (creo que para ordenar lo que pidamos)

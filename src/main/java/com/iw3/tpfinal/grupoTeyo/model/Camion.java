@@ -1,7 +1,6 @@
 package com.iw3.tpfinal.grupoTeyo.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

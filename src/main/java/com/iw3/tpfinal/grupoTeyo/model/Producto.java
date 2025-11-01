@@ -33,25 +33,12 @@ public class Producto {
     private String codigoExterno;
 
     // Nombre obligatorio
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 200, unique = true)
     private String nombre;
 
     // Descripción opcional
     @Column(nullable = true, length = 1000)
     private String descripcion;
-
-    // Indica si el producto es una entidad compuesta (tiene componentes)
-    @Column(nullable = false)
-    private boolean compuesto = false;
-
-    // Componentes cuando el producto es compuesto (relación self-referenciada)
-    @ManyToMany
-    @JoinTable(
-        name = "producto_componentes",
-        joinColumns = @JoinColumn(name = "producto_id"),
-        inverseJoinColumns = @JoinColumn(name = "componente_id")
-    )
-    private ArrayList<Producto> componentes = new ArrayList<>();
 
 }
 

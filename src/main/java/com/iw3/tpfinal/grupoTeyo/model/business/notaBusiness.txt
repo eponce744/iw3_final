@@ -1,0 +1,7 @@
+La capa de negocio consiste en una interfaz que SIEMPRE es lo mas importante 
+y dependen de nosostros (no de Spring, aunque internamente le vamos a meter cosas con Spring).
+
+Entonces, la interfaz tiene lo mas importante y el resto (lo que sería el código/mecanismo) en otra parte.
+La interfaz me da el "big picture".
+
+Clase 2025-8-26 --> Minuto 49:00
