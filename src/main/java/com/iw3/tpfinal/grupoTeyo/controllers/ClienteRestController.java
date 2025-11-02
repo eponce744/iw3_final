@@ -14,39 +14,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iw3.tpfinal.grupoTeyo.model.Orden;
+import com.iw3.tpfinal.grupoTeyo.model.Cliente;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
-import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
+import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IClienteBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
 
 @RestController
-@RequestMapping(Constants.URL_ORDENES)
-public class OrdenRestController {
+@RequestMapping(Constants.URL_CLIENTES)
+public class ClienteRestController {
 
-    //Creo una instancia de la interface de Orden Business
+    //Creo una instancia de la interface de Cliente Business
     @Autowired
-    private IOrdenBusiness ordenBusiness;
+    private IClienteBusiness clienteBusiness;
     @Autowired
     private IStandartResponseBusiness response;
 
-    //Listar todas las ordenes
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> list(){
         try {
-            return new ResponseEntity<>(ordenBusiness.list(), HttpStatus.OK);
+            return new ResponseEntity<>(clienteBusiness.list(), HttpStatus.OK);
         }catch(BusinessException e){ //Devuelve un standart response
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    //Traer una orden por su ID
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> loadOrden(@PathVariable long id){
+    public ResponseEntity<?> loadCliente(@PathVariable long id){
         try{
-            return new ResponseEntity<>(ordenBusiness.load(id), HttpStatus.OK);
+            return new ResponseEntity<>(clienteBusiness.load(id), HttpStatus.OK);
         }catch (BusinessException e){
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -55,13 +53,25 @@ public class OrdenRestController {
         }
     }
 
-    //Agregar una nueva orden
-    @PostMapping(value = "")
-    public ResponseEntity<?> addOrden(@RequestBody Orden orden){
+    @GetMapping(value = "/by-razon-social/{razonSocial}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> loadClienteByRazonSocial(@PathVariable String razonSocial){
         try{
-            Orden response = ordenBusiness.add(orden);
+            return new ResponseEntity<>(clienteBusiness.load(razonSocial), HttpStatus.OK);
+        }catch (BusinessException e){
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    
+    @PostMapping(value = "")
+    public ResponseEntity<?> addCliente(@RequestBody Cliente cliente){
+        try{
+            Cliente response = clienteBusiness.add(cliente);
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("location", Constants.URL_ORDENES + "/" + response.getId());
+            responseHeaders.set("location", Constants.URL_CLIENTES + "/" + response.getId());
             return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
         }catch (BusinessException e){
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
@@ -73,10 +83,13 @@ public class OrdenRestController {
     }
 
     @PutMapping(value = "")
-    public ResponseEntity<?> updateOrden(@RequestBody Orden orden){
+    public ResponseEntity<?> updateCliente(@RequestBody Cliente cliente){
         try{
-            ordenBusiness.update(orden);
+            clienteBusiness.update(cliente);
             return new ResponseEntity<>(HttpStatus.OK);
+        }catch (FoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.FOUND, e, e.getMessage()),
+                    HttpStatus.FOUND);
         }catch (BusinessException e){
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,9 +99,9 @@ public class OrdenRestController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteOrden(@PathVariable long id){
+    public ResponseEntity<?> deleteCliente(@PathVariable long id){
         try{
-            ordenBusiness.delete(id);
+            clienteBusiness.delete(id);
             return new ResponseEntity<String>(HttpStatus.OK);
         }catch (BusinessException e){
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
@@ -96,6 +109,6 @@ public class OrdenRestController {
         }catch (NotFoundException e) {
             return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
         }
-    }
-    
+    }    
+
 }

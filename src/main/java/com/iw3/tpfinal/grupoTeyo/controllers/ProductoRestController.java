@@ -49,8 +49,8 @@ public class ProductoRestController {
         }
     }
 
-    @GetMapping(value = "/by-name/{producto}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> loadProducto(@PathVariable String producto){
+    @GetMapping(value = "/by-nombre/{producto}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> loadProductoByNombre(@PathVariable String producto){
         try{
             return new ResponseEntity<>(productoBusiness.load(producto), HttpStatus.OK);
         }catch (BusinessException e){
@@ -107,6 +107,7 @@ public class ProductoRestController {
         }
     }
 
+    /* 
     @DeleteMapping(value = "/by-name/{producto}")
     public ResponseEntity<?> deleteProducto(@PathVariable String producto){
         try{
@@ -120,4 +121,5 @@ public class ProductoRestController {
             return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
+    */
 }
