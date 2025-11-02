@@ -49,7 +49,7 @@ public class ProductoRestController {
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("location", Constants.URL_PRODUCTOS + "/" + response.getId());
             return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
-        } catch (BusinessException e) {
+        }catch (BusinessException e){
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
                     HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (FoundException e) {
