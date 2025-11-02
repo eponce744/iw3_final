@@ -63,14 +63,14 @@ public class Orden {
 	private Cliente cliente;
 	
 	@OneToOne
-	@JoinColumn(name="id_cliente", nullable = true)
+	@JoinColumn(name="id_camion", nullable = true)
 	private Camion camion;
 	
 	@OneToOne
-	@JoinColumn(name="id_cliente", nullable = true)
+	@JoinColumn(name="id_chofer", nullable = true)
 	private Chofer chofer;
 	
 	@OneToOne
-	@JoinColumn(name="id_cliente", nullable = true)
+	@JoinColumn(name="id_producto", nullable = true)
 	private Producto producto;
 }

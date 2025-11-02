@@ -1,5 +1,6 @@
 package com.iw3.tpfinal.grupoTeyo.model.business.implementations;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class OrdenBusiness implements IOrdenBusiness{
 
     @Override
     public List<Orden> list() throws BusinessException {
-        
+
         try {
             return ordenDAO.findAll(); // findAll() ya viene implementado en JpaRepository
         } catch (Exception e) {
@@ -36,26 +37,63 @@ public class OrdenBusiness implements IOrdenBusiness{
 
     @Override
     public Orden load(long id) throws NotFoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'load'");
+        Optional<Orden> ordenEncontrada;
+        try {
+            ordenEncontrada = ordenDAO.findById(id); // findById() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
+        if (ordenEncontrada.isEmpty()) {
+            throw NotFoundException.builder().message("No se encontró la orden con ID: " + id).build();
+        }
+        return ordenEncontrada.get();
     }
 
     @Override
     public Orden add(Orden orden) throws FoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
+        try {
+            load(orden.getId());
+            throw FoundException.builder().message("La orden con ID: " + orden.getId() + " ya existe").build();
+        } catch (NotFoundException e) {
+        }
+        try {
+            return ordenDAO.save(orden); // save() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
     }
 
     @Override
     public Orden update(Orden orden) throws NotFoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        load(orden.getId()); // Verifico que la orden exista, si no lanza NotFoundException
+        try {
+            return ordenDAO.save(orden); // save() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
     }
 
     @Override
     public void delete(long id) throws NotFoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        load(id);
+        try {
+            ordenDAO.deleteById(id);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
+    }
+
+    @Override
+    public void delete(Orden orden) throws NotFoundException, BusinessException {
+        delete(orden.getId());   
     }
 
 }

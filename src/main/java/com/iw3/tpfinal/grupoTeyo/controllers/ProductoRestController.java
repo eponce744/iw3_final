@@ -2,7 +2,10 @@ package com.iw3.tpfinal.grupoTeyo.controllers;
 
 import com.iw3.tpfinal.grupoTeyo.model.Producto;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
+import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IProductoBusiness;
+import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +20,8 @@ public class ProductoRestController {
     //Creo una instancia de la interface de Producto Business
     @Autowired
     private IProductoBusiness productoBusiness;
+    @Autowired
+    private IStandartResponseBusiness response;
 
     //produces = Formato en el que va a renderizar va a ser JSON, es decir que es el contetype de respuesta
     //ResponseEntity = se hace cargo de todo el mensaje completo(cabecera,cookie, status code real, y body si se quiere)
@@ -25,11 +30,9 @@ public class ProductoRestController {
     public ResponseEntity<?> list(){
         try {
             return new ResponseEntity<>(productoBusiness.list(), HttpStatus.OK);
-        }catch(BusinessException e){
-            //Hay que usar el StandartResponse y llamarlo como response!!
-            // ATENTO!!! IMPLEMENTAR standartResponse, y llamar una instancia que se llame response
-            //return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-            throw new UnsupportedOperationException("Unimplemented method 'loadProducto'");
+        }catch(BusinessException e){ //Devuelve un standart response
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -38,20 +41,23 @@ public class ProductoRestController {
         throw new UnsupportedOperationException("Unimplemented method 'loadProducto'");
     }
 
+    
     @PostMapping(value = "")
     public ResponseEntity<?> addProducto(@RequestBody Producto producto){
         try{
-            //Me parece que salta el el error porque falta implementar el add
             Producto response = productoBusiness.add(producto);
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("location", Constants.URL_PRODUCTOS + "/" + response.getId());
             return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
-        }catch (BusinessException e){
-            //FALTA IMPLEMENTAR la instancia de standartResponse
-            throw new UnsupportedOperationException("Unimplemented method 'loadProducto'");
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (FoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.FOUND, e, e.getMessage()), 
+                    HttpStatus.FOUND);
         }
     }
-
+    
     public ResponseEntity<?> updateProducto(){
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'loadProducto'");

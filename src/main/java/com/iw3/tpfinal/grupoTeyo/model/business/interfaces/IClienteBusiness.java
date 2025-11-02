@@ -15,12 +15,18 @@ public interface IClienteBusiness {
     // Método para cargar(o traer) un cliente por su ID
     public Cliente load(long id) throws NotFoundException, BusinessException;
 
+    // Método para cargar(o traer) un cliente por su razón social
+    public Cliente load(String razonSocial) throws NotFoundException, BusinessException;
+
     // Método para agregar un nuevo cliente
     public Cliente add(Cliente cliente) throws FoundException, BusinessException;
 
     // Método para modificar un cliente existente
-    public Cliente update(Cliente cliente) throws NotFoundException, BusinessException;
+    public Cliente update(Cliente cliente) throws FoundException,NotFoundException, BusinessException;
 
     // Método para eliminar un cliente por su ID
     public void delete(long id) throws NotFoundException, BusinessException;
+
+    // Elimina un cliente dado el objeto Cliente
+    public void delete(Cliente cliente) throws NotFoundException, BusinessException;
 }

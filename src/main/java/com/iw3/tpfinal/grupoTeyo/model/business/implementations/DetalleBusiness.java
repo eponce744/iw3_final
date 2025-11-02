@@ -1,5 +1,6 @@
 package com.iw3.tpfinal.grupoTeyo.model.business.implementations;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,10 @@ public class DetalleBusiness implements IDetalleBusiness{
     @Autowired // Para que Spring lo inyecte automáticamente
     private DetalleRepository detalleDAO;
 
-    @Override
-    public List<Detalle> listByOrden(long ordenId) throws NotFoundException, BusinessException{
+    @Override // Método para listar todos los detalles de una orden específica
+    public List<Detalle> listByOrden(long ordenId) throws NotFoundException, BusinessException{ 
         
-        List<Detalle> detallesEncontrados; // Lista para almacenar los detalles encontrados
+        Optional<List<Detalle>> detallesEncontrados; // Lista para almacenar los detalles encontrados
 
         try {
             detallesEncontrados = detalleDAO.findByOrdenId(ordenId); // findByOrdenId() viene de la interfaz DetalleRepository
@@ -33,23 +34,42 @@ public class DetalleBusiness implements IDetalleBusiness{
             throw BusinessException.builder().ex(e).message(e.getMessage()).build();
             // Reenvío la excepción como BusinessException usando el patrón Builder
         }
-        if (detallesEncontrados == null || detallesEncontrados.isEmpty()) { // Si no se encontraron detalles
+        if (detallesEncontrados.isEmpty()) { // Si no se encontraron detalles
             throw NotFoundException.builder().message("No se encontraron detalles para la orden con ID: " + ordenId).build();
         }
-        return detallesEncontrados;
-    
+        return detallesEncontrados.get();
     }
 
     @Override
     public Detalle load(long id) throws NotFoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'load'");
+        Optional<Detalle> detalleEncontrado;
+        try {
+            detalleEncontrado = detalleDAO.findById(id); // findById() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
+        if (detalleEncontrado.isEmpty()) {
+            throw NotFoundException.builder().message("No se encontró el detalle con ID: " + id).build();
+        }
+        return detalleEncontrado.get();
     }
 
     @Override
     public Detalle add(Detalle detalle) throws FoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
+        try {
+            load(detalle.getId());
+            throw FoundException.builder().message("El detalle con ID: " + detalle.getId() + " ya existe").build();
+        } catch (NotFoundException e) {
+        }
+        try {
+            return detalleDAO.save(detalle); // save() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
     }
 
 

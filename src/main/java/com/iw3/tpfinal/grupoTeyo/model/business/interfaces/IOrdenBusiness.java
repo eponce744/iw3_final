@@ -23,4 +23,6 @@ public interface IOrdenBusiness {
 
     // Método para eliminar una orden por su ID
     public void delete(long id) throws NotFoundException, BusinessException;
+
+    public void delete(Orden orden) throws NotFoundException, BusinessException;
 }

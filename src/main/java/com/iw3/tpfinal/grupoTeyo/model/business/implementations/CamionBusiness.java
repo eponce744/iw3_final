@@ -1,5 +1,6 @@
 package com.iw3.tpfinal.grupoTeyo.model.business.implementations;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,26 +37,96 @@ public class CamionBusiness implements ICamionBusiness{
 
     @Override
     public Camion load(long id) throws NotFoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'load'");
+        Optional<Camion> camionEncontrado;
+        try {
+            camionEncontrado = camionDAO.findById(id); // findById() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
+        if (camionEncontrado.isEmpty()) {
+            throw NotFoundException.builder().message("No se encontró el camión con ID: " + id).build();
+        }
+        return camionEncontrado.get();
+    }
+
+    @Override
+    public Camion load(String patente) throws NotFoundException, BusinessException{
+        Optional<Camion> camionEncontrado;
+        try {
+            camionEncontrado = camionDAO.findByPatente(patente); // findById() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
+        if (camionEncontrado.isEmpty()) {
+            throw NotFoundException.builder().message("No se encontró el camión con patente: " + patente).build();
+        }
+        return camionEncontrado.get();
     }
 
     @Override
     public Camion add(Camion camion) throws FoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
+        try {
+            load(camion.getId());
+            throw FoundException.builder().message("El camión con ID: " + camion.getId() + " ya existe").build();
+        } catch (NotFoundException e) {
+        }
+        try {
+            load(camion.getPatente());
+            throw FoundException.builder().message("El camión con patente: " + camion.getPatente() + " ya existe").build();
+        } catch (NotFoundException e) {
+        }
+        try {
+            return camionDAO.save(camion); // save() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
     }
 
     @Override
-    public Camion update(Camion camion) throws NotFoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public Camion update(Camion camion) throws FoundException, NotFoundException, BusinessException {
+        load(camion.getId()); // Verifico que el camión exista, si no lanza NotFoundException
+        Optional<Camion> camionEncontrado=null;
+        try {
+            camionEncontrado = camionDAO.findByPatenteAndIdNot(camion.getPatente(), camion.getId());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+        }
+
+        if (camionEncontrado.isPresent()) {
+            throw FoundException.builder().message("El camión con patente: " + camion.getPatente() + " ya existe").build();
+        }
+
+        try {
+            return camionDAO.save(camion); // save() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
     }
 
     @Override
     public void delete(long id) throws NotFoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        load(id);
+        try {
+            camionDAO.deleteById(id);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
+    }
+
+    @Override
+    public void delete(Camion camion) throws NotFoundException, BusinessException {
+        delete(camion.getId());
     }
 
 }
