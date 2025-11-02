@@ -3,6 +3,7 @@ package com.iw3.tpfinal.grupoTeyo.controllers;
 import com.iw3.tpfinal.grupoTeyo.model.Producto;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
+import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IProductoBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
 
@@ -36,9 +37,28 @@ public class ProductoRestController {
         }
     }
 
-    public ResponseEntity<?> loadProducto(){
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadProducto'");
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> loadProducto(@PathVariable long id){
+        try{
+            return new ResponseEntity<>(productoBusiness.load(id), HttpStatus.OK);
+        }catch (BusinessException e){
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(value = "/by-name/{producto}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> loadProducto(@PathVariable String producto){
+        try{
+            return new ResponseEntity<>(productoBusiness.load(producto), HttpStatus.OK);
+        }catch (BusinessException e){
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
 
     
@@ -57,14 +77,47 @@ public class ProductoRestController {
                     HttpStatus.FOUND);
         }
     }
-    
-    public ResponseEntity<?> updateProducto(){
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadProducto'");
+
+    @PutMapping(value = "")
+    public ResponseEntity<?> updateProducto(@RequestBody Producto producto){
+        try{
+            productoBusiness.update(producto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (FoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.FOUND, e, e.getMessage()),
+                    HttpStatus.FOUND);
+        }catch (BusinessException e){
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
 
-    public ResponseEntity<?> deleteProducto(){
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadProducto'");
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteProducto(@PathVariable long id){
+        try{
+            productoBusiness.delete(id);
+            return new ResponseEntity<String>(HttpStatus.OK);
+        }catch (BusinessException e){
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping(value = "/by-name/{producto}")
+    public ResponseEntity<?> deleteProducto(@PathVariable String producto){
+        try{
+            //ATENCION!! revisar la firma delete, porque quiere parsearse a un long
+            return new ResponseEntity<>(productoBusiness.delete(producto), HttpStatus.OK);
+
+        }catch (BusinessException e){
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
 }
