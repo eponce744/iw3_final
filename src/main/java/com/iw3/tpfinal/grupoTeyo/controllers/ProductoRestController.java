@@ -39,7 +39,7 @@ public class ProductoRestController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<?> addProducto(@RequestBody Producto producto){
+    /*public ResponseEntity<?> addProducto(@RequestBody Producto producto){
         try{
             //Me parece que salta el el error porque falta implementar el add
             Producto response = productoBusiness.add(producto);
@@ -50,7 +50,7 @@ public class ProductoRestController {
             //FALTA IMPLEMENTAR la instancia de standartResponse
             throw new UnsupportedOperationException("Unimplemented method 'loadProducto'");
         }
-    }
+    }*/
 
     public ResponseEntity<?> updateProducto(){
         // TODO Auto-generated method stub
