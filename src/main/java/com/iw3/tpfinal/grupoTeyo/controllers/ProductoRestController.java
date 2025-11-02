@@ -107,7 +107,7 @@ public class ProductoRestController {
         }
     }
 
-    @DeleteMapping(value = "/by-name/{producto}")
+/*    @DeleteMapping(value = "/by-name/{producto}")
     public ResponseEntity<?> deleteProducto(@PathVariable String producto){
         try{
             //ATENCION!! revisar la firma delete, porque quiere parsearse a un long
@@ -120,4 +120,5 @@ public class ProductoRestController {
             return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
+*/
 }
