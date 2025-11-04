@@ -30,10 +30,10 @@ public class DetalleRestController {
     private IStandartResponseBusiness response;
 
     //Listar todos los detalles de una orden específica (PASAR ID DE "ORDEN")
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> list(@PathVariable long id){
+    @GetMapping(value = "/by-orden/{ordenId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> list(@PathVariable long ordenId){
         try {
-            return new ResponseEntity<>(detalleBusiness.listByOrden(id), HttpStatus.OK);
+            return new ResponseEntity<>(detalleBusiness.listByOrden(ordenId), HttpStatus.OK);
         } catch(BusinessException e){ //Devuelve un standart response
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
                     HttpStatus.INTERNAL_SERVER_ERROR);

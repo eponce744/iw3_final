@@ -114,8 +114,14 @@ public class ClienteBusiness implements IClienteBusiness{
 
     @Override
     public void delete(long id) throws NotFoundException, BusinessException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        load(id);
+        try {
+            clienteDAO.deleteById(id);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
     }
 
     @Override

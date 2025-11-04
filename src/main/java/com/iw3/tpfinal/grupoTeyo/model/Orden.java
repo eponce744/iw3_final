@@ -1,6 +1,8 @@
 package com.iw3.tpfinal.grupoTeyo.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,7 +10,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +26,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Orden {
+
+	public enum Estado {
+		PENDIENTE_PESAJE_INICIAL,
+		PESAJE_INICIAL_REGISTRADO,
+		CERRADA_PARA_CARGA,
+		FINALIZADA
+	}
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,19 +70,23 @@ public class Orden {
 	/*Peso camino vacio*/
 	private Double tara;
 	
-	@OneToOne
-	@JoinColumn(name="id_cliente", nullable = true)
+	@ManyToOne // Relación muchos a uno con Cliente (muchas ordenes pueden tener un cliente)
+	@JoinColumn(name = "id_cliente", nullable = true)
 	private Cliente cliente;
-	
-	@OneToOne
-	@JoinColumn(name="id_camion", nullable = true)
+
+	@ManyToOne // Relación muchos a uno con Camion (muchas ordenes pueden tener un camion)
+	@JoinColumn(name = "id_camion", nullable = true)
 	private Camion camion;
-	
-	@OneToOne
-	@JoinColumn(name="id_chofer", nullable = true)
+
+	@ManyToOne // Relación muchos a uno con Chofer (muchas ordenes pueden tener un chofer)
+	@JoinColumn(name = "id_chofer", nullable = true)
 	private Chofer chofer;
-	
-	@OneToOne
-	@JoinColumn(name="id_producto", nullable = true)
+
+	@ManyToOne // Relación muchos a uno con Producto (muchas ordenes pueden tener un producto)
+	@JoinColumn(name = "id_producto", nullable = true)
 	private Producto producto;
+
+	@JsonManagedReference //"Lado padre"-Para evitar referencia circular al serializar a JSON (Es decir infinito anidamiento)
+	@OneToMany(mappedBy = "orden") // Relación uno a muchos con Detalle (es decir una orden tiene muchos detalles)
+	private Set<Detalle> detalles;
 }

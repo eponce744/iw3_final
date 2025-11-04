@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,7 +40,8 @@ public class Detalle {
 	@Column(columnDefinition = "DATETIME")
 	private Date fechaUltimoDato;
 	
-	@ManyToOne
+	@ManyToOne // Relación muchos a uno con Orden (muchos detalles pertenecen a una orden)
+	@JsonBackReference //"Lado hijo"-Para evitar referencia circular al serializar a JSON
 	@JoinColumn(name="id_orden", nullable = true)
 	private Orden orden;
 }
