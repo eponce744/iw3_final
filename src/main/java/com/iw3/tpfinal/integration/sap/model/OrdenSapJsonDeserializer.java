@@ -81,7 +81,7 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 		String fechaCarga = JsonUtiles.getString(node,
 				"upload_date,date_upload".split(","), null);
 		double preset = JsonUtiles.getDouble(node, "preset,load,to_load".split(","), 0);
-		r.setCodSap1(numero);
+		r.setCodSap(numero);
 		r.setFechaPrevistaCarga(fechaCarga); //Ver como pasar de String a Date
 		r.setPreset(preset);
 		
