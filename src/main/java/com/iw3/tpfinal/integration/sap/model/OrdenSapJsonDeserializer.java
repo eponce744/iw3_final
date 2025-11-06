@@ -10,9 +10,11 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
+import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.ICamionBusiness;
+import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IChoferBusiness;
+import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IClienteBusiness;
+import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IProductoBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.JsonUtiles;
-
-import com.iw3.tpfinal.grupoTeyo.model.business.ICategoryBusiness;
 
 public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 
@@ -36,38 +38,38 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 	
 /*	FALTA HACER LOS BUSINESS DE Cliente, Chofer, Camion y Producto POR ESO TIRA ERRORES ESTA CLASE
  *  SACADO DE LOS VIDEOS DEL 2025-09-30
- * 
-*	private IClienteBusiness clienteBusiness;
-*	
-*	public OrdenSapJsonDeserializer(Class<?> vc, IClienteBusiness clienteBusiness) {
-*		super(vc);
-*		this.clienteBusiness = clienteBusiness;
-*	}
-*	
-*	
-*	private ICamionBusiness camionBusiness;
-*	
-*	public OrdenSapJsonDeserializer(Class<?> vc, ICamionBusiness camionBusiness) {
-*		super(vc);
-*		this.camionBusiness = camionBusiness;
-*	}
-*	
-*	
-*	private IChoferBusiness choferBusiness;
-*	
-*	public OrdenSapJsonDeserializer(Class<?> vc, IChoferBusiness categoryBusiness) {
-*		super(vc);
-*		this.choferBusiness = choferBusiness;
-*	}
-*	
-*	
-*	private IProductoBusiness productoBusiness;
-*	
-*	public OrdenSapJsonDeserializer(Class<?> vc, ICategoryBusiness productoBusiness) {
-*		super(vc);
-*		this.productoBusiness = productoBusiness;
-*	}
-*/	
+ **/ 
+	private IClienteBusiness clienteBusiness;
+	
+	public OrdenSapJsonDeserializer(Class<?> vc, IClienteBusiness clienteBusiness) {
+		super(vc);
+		this.clienteBusiness = clienteBusiness;
+	}
+	
+	
+	private ICamionBusiness camionBusiness;
+	
+	public OrdenSapJsonDeserializer(Class<?> vc, ICamionBusiness camionBusiness) {
+		super(vc);
+		this.camionBusiness = camionBusiness;
+	}
+	
+	
+	private IChoferBusiness choferBusiness;
+	
+	public OrdenSapJsonDeserializer(Class<?> vc, IChoferBusiness choferBusiness) {
+		super(vc);
+		this.choferBusiness = choferBusiness;
+	}
+	
+	
+	private IProductoBusiness productoBusiness;
+	
+	public OrdenSapJsonDeserializer(Class<?> vc, IProductoBusiness productoBusiness) {
+		super(vc);
+		this.productoBusiness = productoBusiness;
+	}
+	
 	
 	@Override
 	public OrdenSap deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
@@ -79,38 +81,35 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 		String fechaCarga = JsonUtiles.getString(node,
 				"upload_date,date_upload".split(","), null);
 		double preset = JsonUtiles.getDouble(node, "preset,load,to_load".split(","), 0);
-		boolean stock = JsonUtiles.getBoolean(node, "stock,in_stock".split(","), false);
 		r.setCodSap1(numero);
-		r.setp(patenteCamion);
-		r.setProduct(productDesc);
-		r.setPrecio(price);
-		r.setStock(stock);
+		r.setFechaPrevistaCarga(fechaCarga); //Ver como pasar de String a Date
+		r.setPreset(preset);
 		
 		String patenteCamion = JsonUtiles.getString(node, "patente,camion_id,identificator_truck,truck_patent".split(","), null);
 		if (patenteCamion != null) {
 			try {
-				r.setCategory(camionBusiness.load(patenteCamion));
+				r.setCamion(camionBusiness.load(patenteCamion));
 			} catch (NotFoundException | BusinessException e) {
 			}
 		}
 		String documentoChofer = JsonUtiles.getString(node, "identity,identity_document".split(","), null);
 		if (documentoChofer != null) {
 			try {
-				r.setCategory(choferBusiness.load(documentoChofer));
+				r.setChofer(choferBusiness.load(documentoChofer));
 			} catch (NotFoundException | BusinessException e) {
 			}
 		}
 		String razonSocial = JsonUtiles.getString(node, "company_name,name_company".split(","), null);
 		if (razonSocial != null) {
 			try {
-				r.setCategory(clienteBusiness.load(razonSocial));
+				r.setCliente(clienteBusiness.load(razonSocial));
 			} catch (NotFoundException | BusinessException e) {
 			}
 		}
 		String codigoProducto = JsonUtiles.getString(node, "code_product,product_code".split(","), null);
 		if (codigoProducto != null) {
 			try {
-				r.setCategory(productoBusiness.load(codigoProducto));
+				r.setProducto(productoBusiness.load());//Deberia ser un codigo externo
 			} catch (NotFoundException | BusinessException e) {
 			}
 		}
