@@ -22,25 +22,11 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 	protected OrdenSapJsonDeserializer(Class<?> vc) {
 		super(vc);
 	}
-
-	/*
-	 * Se recibira, por ejemplo
-	 * { 
-	 * 	"order_code" : 12as52as1c,
-	 * 	"identificator_truck" : "EE542SS52" 
-	 * 	"identity_document" : "ARG45002542"
-	 *  "company_name":"fuel company"
-	 *  "code_product":"petrolARG254"
-	 *  "upload_date":"2012-04-23T18:25:43.511Z"
-	 *  "preset": "20.000"
-	 *  }
-	 * */
 	
-/*	FALTA HACER LOS BUSINESS DE Cliente, Chofer, Camion y Producto POR ESO TIRA ERRORES ESTA CLASE
- *  SACADO DE LOS VIDEOS DEL 2025-09-30
- **/ 
 	private IClienteBusiness clienteBusiness;
 	
+	//Constructor que recibe el tipo de clase y la instancia de la interfaz usada en la deserialización.
+	//Deserealizacion: JSON a clase Java
 	public OrdenSapJsonDeserializer(Class<?> vc, IClienteBusiness clienteBusiness) {
 		super(vc);
 		this.clienteBusiness = clienteBusiness;
@@ -48,6 +34,7 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 	
 	
 	private ICamionBusiness camionBusiness;
+	
 	
 	public OrdenSapJsonDeserializer(Class<?> vc, ICamionBusiness camionBusiness) {
 		super(vc);
@@ -70,11 +57,11 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 		this.productoBusiness = productoBusiness;
 	}
 	
-	
+	//El resultado de esto es la instanciacion de una clase Java a partir del Json recibido
 	@Override
 	public OrdenSap deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
 		OrdenSap r = new OrdenSap();
-		JsonNode node = jp.getCodec().readTree(jp);
+		JsonNode node = jp.getCodec().readTree(jp); //Instancia de un objeto que representa el JSON recibido
 
 		String numero = JsonUtiles.getString(node, "order_code,code,number_order,order_number".split(","),
 				System.currentTimeMillis() + "");
@@ -85,6 +72,9 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 		r.setFechaPrevistaCarga(fechaCarga); //Ver como pasar de String a Date
 		r.setPreset(preset);
 		
+		//Esto construye un nuevo objeto Camion a partir de la recepcion de su patente, 
+		//si no viene una patente se carga el valor Null
+		//igual para el resto de las clases relacionadas con la clase Orden
 		String patenteCamion = JsonUtiles.getString(node, "patente,camion_id,identificator_truck,truck_patent".split(","), null);
 		if (patenteCamion != null) {
 			try {
@@ -106,10 +96,10 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 			} catch (NotFoundException | BusinessException e) {
 			}
 		}
-		String codigoProducto = JsonUtiles.getString(node, "code_product,product_code".split(","), null);
-		if (codigoProducto != null) {
+		String nombreProducto = JsonUtiles.getString(node, "name_product,product_name".split(","), null);
+		if (nombreProducto != null) {
 			try {
-				r.setProducto(productoBusiness.load());//Deberia ser un codigo externo
+				r.setProducto(productoBusiness.load(nombreProducto));
 			} catch (NotFoundException | BusinessException e) {
 			}
 		}

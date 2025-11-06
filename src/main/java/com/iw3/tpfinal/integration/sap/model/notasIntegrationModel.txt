@@ -1,0 +1,28 @@
+Del sistema externo SAP recibiriamos un JSON al estilo:
+{ 
+	"order_code" : 12as52as1c,
+	"identificator_truck" : "EE542SS52" 
+	"identity_document" : "ARG45002542"
+	"company_name":"fuel company"
+	"code_product":"petrolARG254"
+	"upload_date":"2012-04-23T18:25:43.511Z"
+	"preset": "20.000"
+}
+
+Nuestro sistema externo es SAP, para el caso de las clases, eran Cli1 y Cli2, clase de referencia 2025-09-30
+Aplicamos un Deserializador para el JSON que viene del sistema externo (SAP), me fije en las clases extras del dia.
+Puntos a tener en cuenta:
+* La clase JsonUtiles se usa para los deserealizadores
+
+* Dentro de package model vamos a poner todo lo relacionado a la integracion con el SAP (sistema externo)
+
+* Los nombres de las entidades externas los podemos asumir que vienen en Ingles y nosotros las deserealizamos para adaptarlas a nuestro sistema
+	entre esas adaptaciones esta pasarlas al Español.
+	
+* Para el caso de las entidades Orden y Producto creamos una extensión para recibir su código del sistema externo.
+	Esto se hace ya que los codigos recibidos asumimos que pueden no ser iguales a los que tenemos en nuestro sistema
+	- La extension de Orden es OrdenSap
+	- La extension de Producto es ProductoSap 
+El resto (chofer, cliente y camión) me parece no son necesarias esas integraciones. 
+Video de referencia: Parte 3 del 2025-9-16
+

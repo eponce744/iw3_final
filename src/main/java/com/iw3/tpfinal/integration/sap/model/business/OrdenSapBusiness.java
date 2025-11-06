@@ -12,14 +12,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.iw3.tpfinal.integration.sap.model.OrdenSap;
 import com.iw3.tpfinal.integration.sap.model.OrdenSapJsonDeserializer;
-import com.iw3.tpfinal.integration.sap.model.OrdenSapSlimView; //Ver que es esto y si lo necesitamos!!!
+//import com.iw3.tpfinal.integration.sap.model.OrdenSapSlimView; //Ver que es esto y si lo necesitamos!!!
 import com.iw3.tpfinal.integration.sap.model.persistence.OrdenSapRepository;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 
-import ar.edu.iua.iw3.integration.cli1.model.business.IProductCli1Business;
-import ar.edu.iua.iw3.integration.cli1.model.business.ProductCli1Business;
-import ar.edu.iua.iw3.model.business.ICategoryBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.ICamionBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IChoferBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IClienteBusiness;
