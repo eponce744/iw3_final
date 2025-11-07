@@ -14,6 +14,7 @@ import com.iw3.tpfinal.integration.sap.model.OrdenSap;
 import com.iw3.tpfinal.integration.sap.model.OrdenSapJsonDeserializer;
 //import com.iw3.tpfinal.integration.sap.model.OrdenSapSlimView; //Ver que es esto y si lo necesitamos!!!
 import com.iw3.tpfinal.integration.sap.model.persistence.OrdenSapRepository;
+
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 
@@ -35,10 +36,10 @@ public class OrdenSapBusiness implements IOrdenSapBusiness {
     private OrdenSapRepository ordenDAO;
 
     @Override
-    public OrdenSap load(String codCli1) throws NotFoundException, BusinessException {
+    public OrdenSap load(String codSap) throws NotFoundException, BusinessException {
             Optional<OrdenSap> r;
             try {
-                    r = ordenDAO.findOneByCodSap(codCli1);
+                    r = ordenDAO.findOneByCodSap(codSap);
             } catch (Exception e) {
                     log.error(e.getMessage(), e);
                     throw BusinessException.builder().ex(e).build();
@@ -84,13 +85,23 @@ public class OrdenSapBusiness implements IOrdenSapBusiness {
             }
     }
 
-    @Autowired(required = false)
-    private ICategoryBusiness categoryBusiness;
-
+	@Autowired(required = false)	
+	private IClienteBusiness clienteBusiness;
+	
+	@Autowired(required = false)
+	private ICamionBusiness camionBusiness;
+	
+	@Autowired(required = false)
+	private IChoferBusiness choferBusiness;
+	
+	@Autowired(required = false)
+	private IProductoBusiness productoBusiness;
+	
+	
     @Override
     public OrdenSap addExternal(String json) throws FoundException, BusinessException {
             ObjectMapper mapper = JsonUtiles.getObjectMapper(OrdenSap.class,
-                            new OrdenSapJsonDeserializer(OrdenSap.class, categoryBusiness),null);
+                            new OrdenSapJsonDeserializer(OrdenSap.class, clienteBusiness, camionBusiness, choferBusiness, productoBusiness),null);
             OrdenSap product = null;
             try {
                     product = mapper.readValue(json, OrdenSap.class);
