@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
@@ -36,7 +37,12 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 	private IChoferBusiness choferBusiness;
 	private IProductoBusiness productoBusiness;
 	
-	public OrdenSapJsonDeserializer(Class<?> vc, IClienteBusiness clienteBusiness, ICamionBusiness camionBusiness, IChoferBusiness choferBusiness, IProductoBusiness productoBusiness) {
+	public OrdenSapJsonDeserializer(
+			Class<?> vc, 
+			IClienteBusiness clienteBusiness, 
+			ICamionBusiness camionBusiness, 
+			IChoferBusiness choferBusiness, 
+			IProductoBusiness productoBusiness) {
 		super(vc);
 		this.clienteBusiness = clienteBusiness;
 		this.camionBusiness = camionBusiness;
@@ -52,19 +58,30 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 	public OrdenSap deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
 		OrdenSap r = new OrdenSap();
 		JsonNode node = jp.getCodec().readTree(jp); //Instancia de un objeto que representa el JSON recibido
+		
+		ObjectMapper mapper = (ObjectMapper) jp.getCodec(); // reutiliza el mismo ObjectMapper
+		//En éste caso es equivalente mapper.readTree(jp); a jp.getCodec().readTree(jp)
 
 		//***Recepcion y guardado del valor recibido que se encuentre bajo el nombre de alguno de los tipos que se pasa en el get (getString, getDouble, etc)
 		String numero = JsonUtiles.getString(node, "order_code,code,number_order,order_number".split(","),
 				System.currentTimeMillis() + "");
-		String fechaCarga = JsonUtiles.getString(node,
-				"upload_date,date_upload".split(","), null);
+	
 		double preset = JsonUtiles.getDouble(node, "preset,load,to_load".split(","), 0);
 		
 		//Llamado a los Getter de la clase OrdenSap, pasando los valores recolectados del JSON
 		//Recordar que OrdenSap hereda los atributos de la clase Orden y solo agrega codSap como nuevo atributo
 		r.setCodSap(numero);
-		r.setFechaPrevistaCarga(parseFechaFlexible(fechaCarga));
 		r.setPreset(preset);
+		
+		//Las fechas en el JSON deben ser exactamente del formato "2025-11-08T14:35:00"
+		if (node.has("fechaPrevistaCarga")) {
+			try {
+				Date fecha = mapper.convertValue(node.get("fechaPrevistaCarga"), Date.class);
+				r.setFechaPrevistaCarga(fecha);
+			} catch (IllegalArgumentException e) {
+				System.err.println("Error al convertir la fecha: " + e.getMessage());
+			}
+		}
 		
 		//Esto construye un nuevo objeto Camion a partir de la recepcion de su patente, 
 		//si no viene una patente se carga el valor Null
@@ -98,38 +115,6 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 			}
 		}
 		return r;
-	}
-	
-	
-	//---------------- Metodo Auxiliar para Fecha ---------------
-	//Convierte la fecha recibida en formato String a Java.util.Date seleccionando entre distintos formatos posibles
-	
-	private Date parseFechaFlexible(String fechaStr) {
-	    if (fechaStr == null) return null;
-
-	    String[] formatos = {
-	        "yyyy-MM-dd'T'HH:mm:ss",
-	        "yyyy-MM-dd HH:mm:ss",
-	        "yyyy-MM-dd'T'HH:mm",
-	        "yyyy-MM-dd"
-	    };
-
-	    //Recorremos el arreglo "formatos" guardando en cada iteracion en la variable temporal "f"
-	    for (String f : formatos) {
-	        try {
-	        	//Creamos una nueva instancia de SimpleDateFormat con el formato guardado en la variable f. 
-	        	//SimpleDateFormat es la clase clásica para convertir String <-> Date.
-	            SimpleDateFormat sdf = new SimpleDateFormat(f);
-	            sdf.setTimeZone(java.util.TimeZone.getTimeZone("America/Argentina/Buenos_Aires")); // Zona local
-	            return sdf.parse(fechaStr);
-	        } catch (ParseException e) {
-	            // Ignoramos el error e intentamos con el siguiente formato
-	        }
-	    }
-
-	    // Si no matchea ninguno, lanzamos el error y devuelve null para la fecha
-	    System.err.println("No se pudo parsear la fecha: " + fechaStr);
-	    return null;
 	}
 
 }

@@ -12,4 +12,8 @@ public final class Constants {
     public static final String URL_ORDENES = URL_BASE + "/ordenes";
     public static final String URL_DETALLES = URL_BASE + "/detalles";
     public static final String URL_PRODUCTOS = URL_BASE + "/productos";
+    
+    //Integracion
+    public static final String URL_INTEGRATION = URL_BASE + "/integration";
+    public static final String URL_INTEGRATION_SAP = URL_INTEGRATION + "/sap";
 }

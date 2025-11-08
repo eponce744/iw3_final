@@ -26,8 +26,6 @@ Puntos a tener en cuenta:
 El resto (chofer, cliente y camión) me parece no son necesarias esas integraciones. 
 Video de referencia: Parte 3 del 2025-9-16
 
-Para el caso de la fecha se usa el metodo auxiliar (o método Helper) parseFechaFlexible para convertir el formato String de Fecha recibido en alguno de los 
-formatos que tiene el arreglo "formatos".
-Por otro lado usamos el metodo sdf.setTimeZone(java.util.TimeZone.getTimeZone("America/Argentina/Buenos_Aires")) para configurar la zona horaria en sdf.
-Finalmente a partir del formato elegido para la variable "sdf" se convierte la cadena fechaStrt a un objeto del tipo java.util.Date
-
+Dejo que el paquete Jackson maneje automaticamente la conversion de la fechaPrevista de carga.
+Teniendo en cuenta que en el JSON el formato de fecha debe ser exactamente del tipo "2025-11-08T14:35:00". 
+Con eso simplifico y no hace falta ningun metodo helper adicional
