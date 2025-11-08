@@ -45,7 +45,7 @@ public class OrdenSapBusiness implements IOrdenSapBusiness {
                     throw BusinessException.builder().ex(e).build();
             }
             if (r.isEmpty()) {
-                    throw NotFoundException.builder().message("No se encuentra el Producto codSap=" + codSap).build();
+                    throw NotFoundException.builder().message("No se encuentra la Orden codSap=" + codSap).build();
             }
             return r.get();
     }
@@ -68,12 +68,12 @@ public class OrdenSapBusiness implements IOrdenSapBusiness {
 
             try {
                     ordenBaseBusiness.load(orden.getId());
-                    throw FoundException.builder().message("Se encontró el Producto id=" + orden.getId()).build();
+                    throw FoundException.builder().message("Se encontró la Orden id=" + orden.getId()).build();
             } catch (NotFoundException e) {
             }
 
             if (ordenDAO.findOneByCodSap(orden.getCodSap()).isPresent()) {
-                    throw FoundException.builder().message("Se encontró el Producto código=" + orden.getCodSap()).build();
+                    throw FoundException.builder().message("Se encontró el Orden código=" + orden.getCodSap()).build();
             }
 
 
@@ -101,16 +101,21 @@ public class OrdenSapBusiness implements IOrdenSapBusiness {
     @Override
     public OrdenSap addExternal(String json) throws FoundException, BusinessException {
             ObjectMapper mapper = JsonUtiles.getObjectMapper(OrdenSap.class,
-                            new OrdenSapJsonDeserializer(OrdenSap.class, clienteBusiness, camionBusiness, choferBusiness, productoBusiness),null);
-            OrdenSap product = null;
+                            new OrdenSapJsonDeserializer(
+                            		OrdenSap.class, 
+                            		clienteBusiness, 
+                            		camionBusiness, 
+                            		choferBusiness, 
+                            		productoBusiness),null);
+            OrdenSap orden = null;
             try {
-                    product = mapper.readValue(json, OrdenSap.class);
+                    orden = mapper.readValue(json, OrdenSap.class);
             } catch (JsonProcessingException e) {
                     log.error(e.getMessage(), e);
                     throw BusinessException.builder().ex(e).build();
             }
 
-            return add(product);
+            return add(orden);
 
     }
 }
