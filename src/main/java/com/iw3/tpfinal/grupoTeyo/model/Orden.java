@@ -3,18 +3,8 @@ package com.iw3.tpfinal.grupoTeyo.model;
 import java.util.Date;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +25,6 @@ public class Orden {
 		CERRADA_PARA_CARGA,
 		FINALIZADA
 	}
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,7 +54,16 @@ public class Orden {
 	/*Momento de recepción del pesaje final.*/
 	@Column(columnDefinition = "DATETIME")
 	private Date fechaPesajeFinal;
-	
+
+
+    @Enumerated(EnumType.STRING)
+    @Column()
+    private Estado estado;
+
+    @Column(unique = true)
+    private Integer activarPassword;
+
+
 	/*Kilos a cargar*/
 	private Double preset;
 	
