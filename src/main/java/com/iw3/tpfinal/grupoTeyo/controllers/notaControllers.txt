@@ -1,2 +1,4 @@
 Los controladores lo que hacen es transformar y solucionar cuando viene un "PATH" de una URL en particular
 ejecutar "tal cosa java".
+
+Sacado del video del 2025-9-2 Parte 1 a partir del min 47

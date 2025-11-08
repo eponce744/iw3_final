@@ -1,4 +1,4 @@
-package com.iw3.tpfinal.integration.sap.model;
+package com.iw3.tpfinal.grupoTeyo.integration.sap.model;
 
 import java.util.Date;
 

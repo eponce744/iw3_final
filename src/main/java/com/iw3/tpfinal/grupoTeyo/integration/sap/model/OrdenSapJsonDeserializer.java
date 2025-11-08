@@ -1,11 +1,7 @@
-package com.iw3.tpfinal.integration.sap.model;
+package com.iw3.tpfinal.grupoTeyo.integration.sap.model;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
