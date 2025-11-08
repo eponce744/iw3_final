@@ -32,6 +32,7 @@ public class OrdenSapRestController extends BaseRestController {
 	@Autowired
 	private IStandartResponseBusiness response;
 
+	//Listar todos las ordenes Externas
 	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> list() {
 		try {
@@ -42,6 +43,7 @@ public class OrdenSapRestController extends BaseRestController {
 		}
 	}
 
+	//Traer una orden por su codigo Externo
 	@GetMapping(value = "/{codSap}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> loadByCode(@PathVariable("codSap") String codSap) {
 		try {
@@ -54,6 +56,7 @@ public class OrdenSapRestController extends BaseRestController {
 		}
 	}
 
+	//Agregar una orden por el codigo externo
 	@PostMapping(value = "")
 	public ResponseEntity<?> add(@RequestBody OrdenSap product) {
 		try {
@@ -69,6 +72,7 @@ public class OrdenSapRestController extends BaseRestController {
 		}
 	}
 
+	//Agregar una orden por un codigo externo
 	@PostMapping(value = "/b2b")
 	public ResponseEntity<?> addExternal(HttpEntity<String> httpEntity) {
 		try {

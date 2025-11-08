@@ -32,27 +32,28 @@ public class Orden {
     
     /*momento en que se recibe la orden desde el
     sistema externo*/
-	@Column(columnDefinition = "DATETIME NOT NULL")
+	@Column(columnDefinition = "DATETIME",nullable = true)
 	private Date fechaRecepcion;
 	
 	/*registro del pesaje vacío (tara).*/
-	@Column(columnDefinition = "DATETIME NOT NULL")
+	@Column(columnDefinition = "DATETIME",nullable = true)
 	private Date fechaPesajeInicial;
 	
 	/*(turno de carga,*/
-	@Column(columnDefinition = "DATETIME NOT NULL")
+	//@Column(columnDefinition = "DATETIME NOT NULL")
+	@Column(columnDefinition = "DATETIME",nullable = true)
 	private Date fechaPrevistaCarga;
 	
 	/*momento del primer registro válido de detalle.*/
-	@Column(columnDefinition = "DATETIME")
+	@Column(columnDefinition = "DATETIME",nullable = true)
 	private Date fechaInicioCarga;
 	
 	/*Momento de recepción del pesaje final.*/
-	@Column(columnDefinition = "DATETIME")
+	@Column(columnDefinition = "DATETIME",nullable = true)
 	private Date fechaFinCarga;
 	
 	/*Momento de recepción del pesaje final.*/
-	@Column(columnDefinition = "DATETIME")
+	@Column(columnDefinition = "DATETIME",nullable = true)
 	private Date fechaPesajeFinal;
 
 

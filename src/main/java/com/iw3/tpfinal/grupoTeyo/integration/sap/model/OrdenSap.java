@@ -25,7 +25,7 @@ public class OrdenSap extends Orden{
 	@Column(nullable=false, unique=true)
 	private String codSap;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "America/Argentina/Buenos_Aires")
-	private Date fechaPrevistaCarga;
+	//@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "America/Argentina/Buenos_Aires")
+	//private Date fechaPrevistaCarga;
 
 }

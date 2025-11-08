@@ -70,14 +70,14 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 		r.setPreset(preset);
 		
 		//Las fechas en el JSON deben ser exactamente del formato "2025-11-08T14:35:00"
-		if (node.has("fechaPrevistaCarga")) {
+		/*if (node.has("fechaPrevistaCarga")) {
 			try {
 				Date fecha = mapper.convertValue(node.get("fechaPrevistaCarga"), Date.class);
 				r.setFechaPrevistaCarga(fecha);
 			} catch (IllegalArgumentException e) {
 				System.err.println("Error al convertir la fecha: " + e.getMessage());
 			}
-		}
+		}*/
 		
 		//Esto construye un nuevo objeto Camion a partir de la recepcion de su patente, 
 		//si no viene una patente se carga el valor Null
