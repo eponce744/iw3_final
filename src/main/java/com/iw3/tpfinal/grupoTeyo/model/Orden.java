@@ -1,6 +1,5 @@
 package com.iw3.tpfinal.grupoTeyo.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
