@@ -28,13 +28,17 @@ public class Detalle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-	private double masaAcumulada;
+	@Column(nullable = false)
+	private float masaAcumulada;
 	
-	private double densidad;
+	@Column(nullable = false)
+	private float densidad;
 	
-	private double temperatura;
+	@Column(nullable = false)
+	private float temperatura;
 	
-	private double caudal;
+	@Column(nullable = false)
+	private float caudal;
 	
 	/*Estampa de tiempo: momento de recepción del último dato*/
 	@Column(columnDefinition = "DATETIME")

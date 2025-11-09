@@ -76,6 +76,17 @@ public class Orden {
 	/*Peso camino vacio*/
 	private Double tara;
 	
+    // Último estado de la carga
+    private Date lastTimeStamp;
+
+    private float ultimaMasaAcumulada;
+
+    private float ultimaDensidad;
+
+    private float ultimaTemperatura;
+
+    private float utimoCaudal;
+	
 	@ManyToOne // Relación muchos a uno con Cliente (muchas ordenes pueden tener un cliente)
 	@JoinColumn(name = "id_cliente", nullable = true)
 	private Cliente cliente;
