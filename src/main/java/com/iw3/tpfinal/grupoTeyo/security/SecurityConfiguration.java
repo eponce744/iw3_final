@@ -21,10 +21,40 @@ public class SecurityConfiguration { //Es para eliminar la "autenticación" por 
         http.cors(CorsConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/**").permitAll()
+                 // Permitir acceso a la documentación OpenAPI / Swagger y recursos estáticos
+                .requestMatchers(
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/swagger-ui/index.html",
+                    "/webjars/**",
+                    "/v3/api-docs.yaml"
+                ).permitAll()
+                // TODO: ajustar permisos para endpoints públicos si corresponde
                 .anyRequest().authenticated()
         );
         return http.build();
     }
 
 }
+
+/* PARA VER SIN NINGUNA AUTENTICACIÓN (DESARROLLO LOCAL)
+@Configuration
+public class SecurityConfiguration {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            // permitir rutas de swagger y docs
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                // permitir temporalmente listar ordenes para pruebas
+                .requestMatchers("/api/v1/ordenes", "/api/v1/ordenes/**").permitAll()
+                // mantener el resto protegido
+                .anyRequest().authenticated()
+            )
+            .csrf().disable();
+        return http.build();
+    }
+}
+*/
