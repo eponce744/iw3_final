@@ -1,7 +1,8 @@
 package com.iw3.tpfinal.grupoTeyo.integration.sap.model;
 
 import java.io.IOException;
-import java.util.Date;
+
+import org.apache.coyote.BadRequestException;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -55,15 +56,21 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 		OrdenSap r = new OrdenSap();
 		JsonNode node = jp.getCodec().readTree(jp); //Instancia de un objeto que representa el JSON recibido
 		
-		ObjectMapper mapper = (ObjectMapper) jp.getCodec(); // reutiliza el mismo ObjectMapper
+		//ObjectMapper mapper = (ObjectMapper) jp.getCodec(); // reutiliza el mismo ObjectMapper
 		//En éste caso es equivalente mapper.readTree(jp); a jp.getCodec().readTree(jp)
 
 		//***Recepcion y guardado del valor recibido que se encuentre bajo el nombre de alguno de los tipos que se pasa en el get (getString, getDouble, etc)
 		String numero = JsonUtiles.getString(node, "order_code,code,number_order,order_number".split(","),
 				System.currentTimeMillis() + "");
+		if(numero == null || numero.isEmpty()) {
+			throw new IOException("Numero de Orden no puede ser nulo o vacio");
+		}
+		
 	
 		double preset = JsonUtiles.getDouble(node, "preset,load,to_load".split(","), 0);
-		
+		if(preset < 0) {
+			throw new IOException("Preset no puede ser negativo");
+		}
 		//Llamado a los Getter de la clase OrdenSap, pasando los valores recolectados del JSON
 		//Recordar que OrdenSap hereda los atributos de la clase Orden y solo agrega codSap como nuevo atributo
 		r.setCodSap(numero);

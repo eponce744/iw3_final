@@ -1,6 +1,7 @@
 package com.iw3.tpfinal.grupoTeyo.integration.sap.model;
 
-import com.iw3.tpfinal.grupoTeyo.model.Orden;
+import com.iw3.tpfinal.grupoTeyo.model.Chofer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -11,18 +12,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="sap_ordenes")
-@PrimaryKeyJoinColumn(name="id_orden") //PrimaryKey (foranea) de la subclase, apunta a PrimaryKey de Clase principal
+@Table(name="sap_choferes")
+@PrimaryKeyJoinColumn(name="id_chofer") //PrimaryKey (foranea) de la subclase, apunta a PrimaryKey de Clase principal
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class OrdenSap extends Orden{
-	
+public class ChoferSap extends Chofer{
+
 	@Column(nullable=false, unique=true)
-	private String codSap;
-	
-	//@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "America/Argentina/Buenos_Aires")
-	//private Date fechaPrevistaCarga;
+	private String codChoferSap;
 
 }
