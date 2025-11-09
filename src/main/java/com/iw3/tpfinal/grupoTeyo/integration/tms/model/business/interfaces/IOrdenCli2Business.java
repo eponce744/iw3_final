@@ -9,5 +9,5 @@ public interface IOrdenCli2Business {
 
     Orden registrarPesajeInicial(String numeroOrden, double pesoInicial) throws BusinessException, NotFoundException, FoundException;
 
-    byte[] registrarPesajeFinal(String numeroOrden, double pesoFinal) throws BusinessException, NotFoundException, FoundException;
+    Orden registrarPesajeFinal(String numeroOrden, double pesoFinal) throws BusinessException, NotFoundException, FoundException;
 }

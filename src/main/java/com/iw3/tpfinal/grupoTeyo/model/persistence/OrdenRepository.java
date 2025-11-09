@@ -5,7 +5,12 @@ import org.springframework.stereotype.Repository;
 
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 
+import java.util.Optional;
+
 @Repository
 public interface OrdenRepository extends JpaRepository<Orden, Long> {
 
+    Optional<Orden> findByActivarPassword(int activarPassword);
+
+    Optional<Orden> findByCamion_PatenteAndEstado(String patente, Orden.Estado estado);
 }

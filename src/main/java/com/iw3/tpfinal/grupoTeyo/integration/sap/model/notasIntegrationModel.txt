@@ -29,3 +29,9 @@ Video de referencia: Parte 3 del 2025-9-16
 Dejo que el paquete Jackson maneje automaticamente la conversion de la fechaPrevista de carga.
 Teniendo en cuenta que en el JSON el formato de fecha debe ser exactamente del tipo "2025-11-08T14:35:00". 
 Con eso simplifico y no hace falta ningun metodo helper adicional
+
+Recordar colocar el preset o cualquier numero double incluyendo el "." en el JSON. 
+Ejemplo: "preset":2 NO FUNCIONA
+		"preset":2.0 SI funciona
+		
+ 
