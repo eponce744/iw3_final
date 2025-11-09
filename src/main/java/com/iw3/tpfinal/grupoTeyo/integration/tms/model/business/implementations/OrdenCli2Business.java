@@ -1,4 +1,4 @@
-package com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.implementations;
+/*package com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.implementations;
 
 import com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.interfaces.IOrdenCli2Business;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
@@ -56,4 +56,4 @@ public class OrdenCli2Business implements IOrdenCli2Business {
 
         double pesajeInicial = orden.getInicialPesaje();
     }
-}
+}*/

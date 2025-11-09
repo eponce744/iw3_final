@@ -14,5 +14,5 @@ public interface OrdenRepository extends JpaRepository<Orden, Long> {
 
     Optional<Orden> findByCamion_PatenteAndEstado(String patente, Orden.Estado estado);
     
-    Optional<Orden> findByIdAndStatus(long id, Orden.Estado Estado);
+    Optional<Orden> findByIdAndEstado(long id, Orden.Estado estado);
 }

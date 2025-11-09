@@ -74,7 +74,7 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         Optional<Orden> orden;
 
         try {
-            orden = ordenDAO.findByIdAndStatus(ordenId, Orden.Estado.PESAJE_INICIAL_REGISTRADO);
+            orden = ordenDAO.findByIdAndEstado(ordenId, Orden.Estado.PESAJE_INICIAL_REGISTRADO);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new BusinessException("Error al recuperar orden", e);
