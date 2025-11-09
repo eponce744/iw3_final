@@ -22,9 +22,16 @@ public class Orden {
 	public enum Estado {
 		PENDIENTE_PESAJE_INICIAL,
 		PESAJE_INICIAL_REGISTRADO,
+        PESAJE_FINAL_REGISTRADO,
 		CERRADA_PARA_CARGA,
 		FINALIZADA
 	}
+
+    //    ORDER_CANCELLED,
+    //        ORDER_RECEIVED,
+    //        REGISTERED_INITIAL_WEIGHING,
+    //        ORDER_CLOSED,
+    //        REGISTERED_FINAL_WEIGHING
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +61,10 @@ public class Orden {
 	/*Momento de recepción del pesaje final.*/
 	@Column(columnDefinition = "DATETIME")
 	private Date fechaPesajeFinal;
+
+    private double inicialPesaje;
+
+    private double finalPesaje;
 
 
     @Enumerated(EnumType.STRING)
