@@ -3,7 +3,7 @@ package com.iw3.tpfinal.grupoTeyo.integration.sap.model;
 import java.io.IOException;
 
 import org.apache.coyote.BadRequestException;
-
+import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -75,6 +75,9 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 		//Recordar que OrdenSap hereda los atributos de la clase Orden y solo agrega codSap como nuevo atributo
 		r.setCodSap(numero);
 		r.setPreset(preset);
+		
+		//Seteamos el estado como Pendiente de pesaje final
+		r.setEstado(Orden.Estado.PENDIENTE_PESAJE_INICIAL);
 		
 		//Las fechas en el JSON deben ser exactamente del formato "2025-11-08T14:35:00"
 		/*if (node.has("fechaPrevistaCarga")) {
