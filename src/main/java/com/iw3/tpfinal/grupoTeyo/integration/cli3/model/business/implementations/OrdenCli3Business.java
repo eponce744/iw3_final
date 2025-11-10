@@ -26,6 +26,10 @@ public class OrdenCli3Business implements IOrdenCli3Business {
     @Autowired
     private IOrdenBusiness ordenBusiness;
 
+    /*
+     * Validamos la orden, enviando el codigoExterno y la password. 
+     * El método devuelve una orden
+     * */
     @Override
     public Orden validacionPassword(String codOrdenSap, int password)
             throws NotFoundException, BusinessException, InvalidityException {

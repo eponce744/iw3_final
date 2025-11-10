@@ -27,6 +27,14 @@ public class OrdenCli2Business implements IOrdenCli2Business {
     @Autowired
     private DetalleBusiness detalleBusiness;
 
+    /*
+     * Este metodo recibe una patente de Camion y su Tara, corrobora que esté 
+     * ligado a una orden con estado PENDIENTE_PESAJE_INICIAL y luego retorna la Orden pero con cambios:
+     * Password = cargada
+     * Pesaje inicial = cargado
+     * Fecha Pesaje inicial = cargado
+     * Estado = cambiado a  PESAJE_INICIAL_REGISTRADO
+     * */
     @Override
     public Orden registrarPesajeInicial(String patente, Double pesajeInicial) throws BusinessException, NotFoundException {
         Optional<Orden> ordenEncontrada;

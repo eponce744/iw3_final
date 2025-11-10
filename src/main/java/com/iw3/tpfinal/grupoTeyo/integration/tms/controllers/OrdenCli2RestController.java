@@ -21,6 +21,11 @@ public class OrdenCli2RestController {
     @Autowired
     IOrdenCli2Business ordenCli2Business;
 
+    /*
+     * Enviamos la patente de un camion y su peso vacio (Tara), 
+     * dicho camion tiene que estar ligado a una orden con estado PENDIENTE_PESAJE_INICIAL para que funcione.
+     * El devuelve un 200, el Id-Orden en el header y en el cuerpo la Password.
+     * */
     @SneakyThrows
     @PostMapping(value = "/pesaje-inicial", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity registrarPesajeInicial(
