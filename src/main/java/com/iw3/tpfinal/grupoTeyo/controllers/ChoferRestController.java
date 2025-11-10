@@ -21,28 +21,51 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IChoferBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping(Constants.URL_CHOFERES)
+@Tag(name = "Chofer", description = "API de gestión de choferes")
+@SecurityRequirement(name = "bearerAuth")
 public class ChoferRestController {
 
-    //Creo una instancia de la interface de Chofer Business
     @Autowired
     private IChoferBusiness choferBusiness;
     @Autowired
     private IStandartResponseBusiness response;
 
+    @Operation(summary = "Listar choferes", description = "Devuelve todos los choferes.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> list(){
         try {
             return new ResponseEntity<>(choferBusiness.list(), HttpStatus.OK);
-        }catch(BusinessException e){ //Devuelve un standart response
-            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
+        }catch(BusinessException e){
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @Operation(summary = "Obtener chofer por id", description = "Carga un chofer por su id numérico.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Chofer encontrado"),
+        @ApiResponse(responseCode = "404", description = "No encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> loadChofer(@PathVariable long id){
+    public ResponseEntity<?> loadChofer(
+        @Parameter(in = ParameterIn.PATH, name = "id", schema = @Schema(type = "integer"), required = true, description = "Identificador del chofer.")
+        @PathVariable long id){
         try{
             return new ResponseEntity<>(choferBusiness.load(id), HttpStatus.OK);
         }catch (BusinessException e){
@@ -53,8 +76,11 @@ public class ChoferRestController {
         }
     }
 
+    @Operation(summary = "Obtener chofer por documento", description = "Devuelve chofer por número de documento.")
     @GetMapping(value = "/by-documento/{documento}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> loadChoferByDocumento(@PathVariable String documento){
+    public ResponseEntity<?> loadChoferByDocumento(
+        @Parameter(in = ParameterIn.PATH, name = "documento", schema = @Schema(type = "string"), required = true, description = "Documento del chofer.")
+        @PathVariable String documento){
         try{
             return new ResponseEntity<>(choferBusiness.load(documento), HttpStatus.OK);
         }catch (BusinessException e){
@@ -65,25 +91,26 @@ public class ChoferRestController {
         }
     }
 
-    
+    @Operation(summary = "Alta de chofer", description = "Crea un nuevo chofer.")
     @PostMapping(value = "")
-    public ResponseEntity<?> addChofer(@RequestBody Chofer chofer){
+    public ResponseEntity<?> addChofer(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Objeto Chofer", required = true) @RequestBody Chofer chofer){
         try{
-            Chofer response = choferBusiness.add(chofer);
+            Chofer resp = choferBusiness.add(chofer);
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("location", Constants.URL_CHOFERES + "/" + response.getId());
+            responseHeaders.set("location", Constants.URL_CHOFERES + "/" + resp.getId());
             return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
         }catch (BusinessException e){
-            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (FoundException e) {
-            return new ResponseEntity<>(response.build(HttpStatus.FOUND, e, e.getMessage()), 
+            return new ResponseEntity<>(response.build(HttpStatus.FOUND, e, e.getMessage()),
                     HttpStatus.FOUND);
         }
     }
 
+    @Operation(summary = "Actualizar chofer", description = "Actualiza los datos de un chofer existente.")
     @PutMapping(value = "")
-    public ResponseEntity<?> updateChofer(@RequestBody Chofer chofer){
+    public ResponseEntity<?> updateChofer(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Objeto Chofer actualizado", required = true) @RequestBody Chofer chofer){
         try{
             choferBusiness.update(chofer);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -98,8 +125,11 @@ public class ChoferRestController {
         }
     }
 
+    @Operation(summary = "Eliminar chofer", description = "Borra un chofer por id.")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteChofer(@PathVariable long id){
+    public ResponseEntity<?> deleteChofer(
+        @Parameter(in = ParameterIn.PATH, name = "id", schema = @Schema(type = "integer"), required = true, description = "Identificador del chofer.")
+        @PathVariable long id){
         try{
             choferBusiness.delete(id);
             return new ResponseEntity<String>(HttpStatus.OK);
