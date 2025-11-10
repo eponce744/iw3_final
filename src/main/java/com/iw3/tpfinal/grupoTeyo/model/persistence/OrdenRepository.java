@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface OrdenRepository extends JpaRepository<Orden, Long> {
 
-    Optional<Orden> findByActivarPassword(int activarPassword);
+    Optional<Orden> findByActivacionPassword(int activarPassword);
 
     Optional<Orden> findByCamion_PatenteAndEstado(String patente, Orden.Estado estado);
     

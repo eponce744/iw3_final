@@ -57,8 +57,10 @@ public class Orden {
 	@Column(columnDefinition = "DATETIME",nullable = true)
 	private Date fechaPesajeFinal;
 
+	@Column(nullable = true)
     private Double inicialPesaje;
 
+	@Column(nullable = true)
     private Double finalPesaje;
 
 

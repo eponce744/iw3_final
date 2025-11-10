@@ -24,39 +24,33 @@ public class OrdenCli3Business implements IOrdenCli3Business {
     private OrdenSapRepository ordenSapDAO;
 
     @Autowired
-    private OrdenBusiness ordenBusiness;
+    private IOrdenBusiness ordenBusiness;
 
     @Override
-    public Orden validacionPassword(String codOrdenSap, int password) throws NotFoundException, BusinessException, InvalidityException {
-        Optional<OrdenSap> ordenSap;
+    public Orden validacionPassword(String codOrdenSap, int password)
+            throws NotFoundException, BusinessException, InvalidityException {
 
-        //Buscamos la orden a partir de su codigo externo de Orden y comparamos la password 
-        //con la que nos envia el sistema de control y tambien verificamos que la orden 
-        //esté en estado 2 (con el pesaje inicial registrado)
-        try {
-        	ordenSap = ordenSapDAO.findOneByCodSap(codOrdenSap);
-        } catch (BusinessException e) {
-            log.error(e.getMessage(), e);
-            throw new BusinessException("Error al recuperar orden", e);
-        } catch (NotFoundException e) {
-            log.error(e.getMessage(), e);
-            throw new NotFoundException("No se encontro la orden con codigo" + codOrdenSap, e);
+        Optional<OrdenSap> ordenSap = ordenSapDAO.findOneByCodSap(codOrdenSap);
+        if (ordenSap.isEmpty()) {
+            throw new NotFoundException("No se encontro la orden con codigo " + codOrdenSap);
         }
-        
-        if (ordenSap.get().getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {
+
+        Orden orden = ordenBusiness.load(ordenSap.get().getId());
+
+        if (orden.getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {
             throw new InvalidityException("Estado de orden no válido");
-
-        Integer contraseniaOrdenSap = ordenSap.get().getActivarPassword();
-        if (contraseniaOrdenSap == password) {
-        	return ordenBusiness.load(ordenSap.get().getId());
         }
-      }
+
+        Integer contraseniaOrdenSap = orden.getActivacionPassword();
+        if (contraseniaOrdenSap != null && contraseniaOrdenSap == password) {
+            return orden; 
+        }
         return null;
     }
 
     @Override
     public Orden recepcionDetalles(Detalle detalle) throws NotFoundException, BusinessException, UnProcessableException, InvalidityException {
-        Orden ordenEncontrada = ordenBusiness.load(detalle.getOrden().getId());
+        /*Orden ordenEncontrada = ordenBusiness.load(detalle.getOrden().getId());
 
         // Validaciones del estado de la Orden
         if (ordenEncontrada.getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {
@@ -76,12 +70,13 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         ordenEncontrada.setUtimoCaudal(detalle.getCaudal());
         ordenDAO.save(ordenEncontrada);
 
-        return ordenEncontrada;
+        return ordenEncontrada;*/
+        return null;
     }
 
     @Override
     public Orden cierreOrden(Long ordenId) throws BusinessException, NotFoundException, InvalidityException {
-        Optional<Orden> orden;
+        /*Optional<Orden> orden;
 
         try {
             orden = ordenDAO.findByIdAndEstado(ordenId, Orden.Estado.PESAJE_INICIAL_REGISTRADO);
@@ -99,7 +94,8 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         //Desactivamos el ingreso de Password para la carga de la orden
         orden.get().setActivarPassword(null);
         return ordenDAO.save(orden.get());
-    }
+    */return null;
+        }
     
     private void chequeoEstadoOrden(Orden orden) throws InvalidityException {
         if (orden.getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {

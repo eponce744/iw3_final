@@ -9,6 +9,6 @@ import com.iw3.tpfinal.grupoTeyo.integration.sap.model.OrdenSap;
 
 @Repository
 public interface OrdenSapRepository extends JpaRepository<OrdenSap, Long>{
-	Optional<OrdenSap> findOneByCodSap(String codSap) throw ;
+	Optional<OrdenSap> findOneByCodSap(String codSap) ;
 
 }

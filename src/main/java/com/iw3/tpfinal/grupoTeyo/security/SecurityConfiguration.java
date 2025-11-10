@@ -9,10 +9,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-/*public class SecurityConfiguration { //Es para eliminar la "autenticación" por defecto que trae spring.
+/*
+public class SecurityConfiguration { //Es para eliminar la "autenticación" por defecto que trae spring.
 
     @Bean	
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -40,21 +42,21 @@ import org.springframework.security.web.SecurityFilterChain;
 
 //PARA VER SIN NINGUNA AUTENTICACIÓN (DESARROLLO LOCAL)
 //@Configuration
+//PARA VER SIN NINGUNA AUTENTICACIÓN (DESARROLLO LOCAL)
 public class SecurityConfiguration {
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // permitir rutas de swagger y docs
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                // permitir temporalmente listar ordenes para pruebas
-                .requestMatchers("/api/v1/ordenes", "/api/v1/ordenes/**").permitAll()
-                // mantener el resto protegido
-                .anyRequest().authenticated()
-            )
-            .csrf().disable();
+            // Disable CSRF and CORS for local development convenience
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(AbstractHttpConfigurer::disable)
+            // Permit everything in development
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+
+        // Optionally, allow frames (e.g., H2 console) by disabling frame options
+        // http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
+
         return http.build();
     }
-}
+} 
 

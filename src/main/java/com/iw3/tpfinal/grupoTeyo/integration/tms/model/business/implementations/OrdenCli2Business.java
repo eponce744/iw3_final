@@ -44,12 +44,12 @@ public class OrdenCli2Business implements IOrdenCli2Business {
         int password;
         do {
             password = Integer.parseInt(ActivacionPassword.generarActivacionPassword());
-        } while (ordenRepository.findByActivarPassword(password).isPresent());
+        } while (ordenRepository.findByActivacionPassword(password).isPresent());
 
 
         ordenEncontrada.get().setActivacionPassword(password);
         ordenEncontrada.get().setInicialPesaje(pesajeInicial);
-        ordenEncontrada.get().setFechaInicioCarga(new Date(System.currentTimeMillis()));
+        ordenEncontrada.get().setFechaPesajeInicial(new Date(System.currentTimeMillis()));
         ordenEncontrada.get().setEstado(Orden.Estado.PESAJE_INICIAL_REGISTRADO);
         ordenBusiness.update(ordenEncontrada.get());
 

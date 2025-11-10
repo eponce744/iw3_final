@@ -22,7 +22,7 @@ public class OrdenCli2RestController {
     IOrdenCli2Business ordenCli2Business;
 
     @SneakyThrows
-    @PostMapping(value = "pesaje-inicial", produces = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(value = "/pesaje-inicial", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity registrarPesajeInicial(
             @RequestHeader("Patente") String patente,
             @RequestHeader("Peso-Inicial") Double pesoInicial) {
