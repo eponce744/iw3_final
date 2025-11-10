@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration { //Es para eliminar la "autenticación" por defecto que trae spring.
+/*public class SecurityConfiguration { //Es para eliminar la "autenticación" por defecto que trae spring.
 
     @Bean	
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,10 +36,10 @@ public class SecurityConfiguration { //Es para eliminar la "autenticación" por 
         return http.build();
     }
 
-}
+}*/
 
-/* PARA VER SIN NINGUNA AUTENTICACIÓN (DESARROLLO LOCAL)
-@Configuration
+//PARA VER SIN NINGUNA AUTENTICACIÓN (DESARROLLO LOCAL)
+//@Configuration
 public class SecurityConfiguration {
 
     @Bean
@@ -57,4 +57,4 @@ public class SecurityConfiguration {
         return http.build();
     }
 }
-*/
+
