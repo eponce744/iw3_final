@@ -28,7 +28,7 @@ public class OrdenCli2Business implements IOrdenCli2Business {
     private DetalleBusiness detalleBusiness;
 
     @Override
-    public Orden registrarPesajeInicial(String numeroOrden, Double pesajeInicial) throws BusinessException, NotFoundException {
+    public Orden registrarPesajeInicial(String patente, Double pesajeInicial) throws BusinessException, NotFoundException {
         Optional<Orden> ordenEncontrada;
 
         try {

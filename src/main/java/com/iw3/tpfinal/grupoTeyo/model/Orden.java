@@ -69,12 +69,22 @@ public class Orden {
     @Column(unique = true)
     private Integer activacionPassword;
 
-
 	/*Kilos a cargar*/
 	private Double preset;
 	
 	/*Peso camino vacio*/
 	private Double tara;
+	
+    // Último estado de la carga
+    private Date lastTimeStamp;
+
+    private Double ultimaMasaAcumulada;
+
+    private Double ultimaDensidad;
+
+    private Double ultimaTemperatura;
+
+    private Double utimoCaudal;
 	
 	@ManyToOne // Relación muchos a uno con Cliente (muchas ordenes pueden tener un cliente)
 	@JoinColumn(name = "id_cliente", nullable = true)
