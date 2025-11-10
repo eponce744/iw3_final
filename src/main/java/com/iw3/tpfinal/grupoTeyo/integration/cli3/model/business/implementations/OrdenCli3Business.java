@@ -1,10 +1,13 @@
 package com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.implementations;
 
 import com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.interfaces.IOrdenCli3Business;
+import com.iw3.tpfinal.grupoTeyo.integration.sap.model.OrdenSap;
+import com.iw3.tpfinal.grupoTeyo.integration.sap.model.persistence.OrdenSapRepository;
 import com.iw3.tpfinal.grupoTeyo.model.Detalle;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.*;
 import com.iw3.tpfinal.grupoTeyo.model.business.implementations.OrdenBusiness;
+import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.persistence.OrdenRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,30 +21,37 @@ import java.util.Optional;
 public class OrdenCli3Business implements IOrdenCli3Business {
 
 	@Autowired
-    private OrdenRepository ordenDAO;
+    private OrdenSapRepository ordenSapDAO;
 
     @Autowired
     private OrdenBusiness ordenBusiness;
 
     @Override
-    public Orden validacionPassword(int password) throws NotFoundException, BusinessException, InvalidityException {
-        Optional<Orden> orden;
+    public Orden validacionPassword(String codOrdenSap, int password) throws NotFoundException, BusinessException, InvalidityException {
+        Optional<OrdenSap> ordenSap;
 
-        //Buscamos la orden a partir del Password recibido y 
-        //tambien verificamos que la orden esté en estado 2 (con el pesaje inicial registrado)
+        //Buscamos la orden a partir de su codigo externo de Orden y comparamos la password 
+        //con la que nos envia el sistema de control y tambien verificamos que la orden 
+        //esté en estado 2 (con el pesaje inicial registrado)
         try {
-        	orden = ordenDAO.findByActivarPassword(password);
-        } catch (Exception e) {
+        	ordenSap = ordenSapDAO.findOneByCodSap(codOrdenSap);
+        } catch (BusinessException e) {
             log.error(e.getMessage(), e);
             throw new BusinessException("Error al recuperar orden", e);
+        } catch (NotFoundException e) {
+            log.error(e.getMessage(), e);
+            throw new NotFoundException("No se encontro la orden con codigo" + codOrdenSap, e);
         }
+        
+        if (ordenSap.get().getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {
+            throw new InvalidityException("Estado de orden no válido");
 
-        if (orden.isEmpty()) {
-            throw new NotFoundException("Orden no encontrada");
+        Integer contraseniaOrdenSap = ordenSap.get().getActivarPassword();
+        if (contraseniaOrdenSap == password) {
+        	return ordenBusiness.load(ordenSap.get().getId());
         }
-     
-        chequeoEstadoOrden(orden.get());
-        return orden.get();
+      }
+        return null;
     }
 
     @Override

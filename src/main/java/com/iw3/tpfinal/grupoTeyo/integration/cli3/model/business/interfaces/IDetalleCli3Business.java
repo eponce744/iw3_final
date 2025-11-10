@@ -5,5 +5,5 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.*;
 
 public interface IDetalleCli3Business {
 
-    void add(Detalle detail) throws FoundException, BusinessException, NotFoundException;
+    void add(Detalle detalle) throws FoundException, BusinessException, NotFoundException;
 }
