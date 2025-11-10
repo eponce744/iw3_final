@@ -1,26 +1,21 @@
-package com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.implementations;
-/*
-import ar.edu.iw3.integration.cli3.model.business.interfaces.IDetailCli3Business;
-import ar.edu.iw3.model.Detail;
-import ar.edu.iw3.model.Order;
-import ar.edu.iw3.model.business.exceptions.*;
-import ar.edu.iw3.model.business.interfaces.IDetailBusiness;
-import ar.edu.iw3.model.business.interfaces.IOrderBusiness;
-import ar.edu.iw3.model.persistence.DetailRepository;
-import ar.edu.iw3.websockets.wrappers.DetailWsWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
+/*package com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.implementations;
+
+
+import com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.interfaces.IDetalleCli3Business;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 public class DetalleCli3Business {
 
 	@Service
-	public class DetailCli3Business implements IDetailCli3Business {
+	@Slf4j
+	public class DetalleCli3Business implements IDetalleCli3Business {
 
 	    @Autowired
 	    private IOrderBusiness orderBusiness;
@@ -31,14 +26,14 @@ public class DetalleCli3Business {
 	    @Autowired
 	    private DetailRepository detailDAO;
 
-	    @Autowired
-	    private SimpMessagingTemplate wSock;
-
+	    /*
+	     //Este método Recibe un Detalle y lo carga en la bd 
+	
 	    @Override
-	    public void add(Detail detail) throws FoundException, BusinessException, NotFoundException {
+	    public void add(Detalle detalle) throws FoundException, BusinessException, NotFoundException {
 	        long currentTime = System.currentTimeMillis();
-	        Order orderFound = orderBusiness.load(detail.getOrder().getId());
-	        Optional<List<Detail>> detailsOptional = detailDAO.findByOrderId(detail.getOrder().getId());
+	        Orden ordenEncontrada = ordenBusiness.load(detalle.getOrder().getId());
+	        Optional<List<Detalle>> detailsOptional = detailDAO.findByOrderId(detail.getOrder().getId());
 
 	        DetailWsWrapper detailWsWrapper = new DetailWsWrapper();
 	        detailWsWrapper.setTimeStamp(new Date(currentTime));
@@ -82,8 +77,4 @@ public class DetalleCli3Business {
 	    private boolean checkFrequency(long currentTime, Date lastTimeStamp) {
 	        return currentTime - lastTimeStamp.getTime() >= SAVE_INTERVAL_MS;
 	    }
-}
-	
-}
-
-*/
+} */
