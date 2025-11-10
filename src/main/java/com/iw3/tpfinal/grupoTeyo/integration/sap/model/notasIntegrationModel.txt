@@ -1,13 +1,80 @@
-Del sistema externo SAP recibiriamos un JSON al estilo:
-{ 
-	"order_code" : 12as52as1c,
-	"identificator_truck" : "EE542SS52" 
-	"identity_document" : "ARG45002542"
-	"company_name":"fuel company"
-	"code_product":"petrolARG254"
-	"upload_date":"2012-04-23T18:25:43.511Z"
-	"preset": "20.000"
+FORMAS DE CARGAR UNA OrdenSap:
+
+1- Usando entidades ya existentes (solo IDs) --> EN LA REALIDAD NO VAN A VENIR IDs
+(Solo se crearán la Orden y se asociarán las relaciones ya presentes en BD)
+{
+"order_code": "SAP-2025-000201",
+"preset": 25000,
+"fechaPrevistaCarga": "2025-11-15T08:30:00",
+"cliente": { "id": 7 },
+"camion": { "id": 12 },
+"chofer": { "id": 9 },
+"producto": { "id": 4 }
 }
+
+-----------------------------------------
+
+2- Creación automática de todas las entidades (sin IDs)
+(Se crearán Cliente, Camion, Chofer, Producto como Sap porque falta id y están los datos mínimos)
+
+{
+"order_code": "SAP-2025-000202",
+"preset": 18000,
+"fechaPrevistaCarga": "2025-11-16T14:00:00-0300",
+"cliente": {
+"razonSocial": "Molinos Río",
+"codigo_cliente": "CLI-00045",
+"contacto": "+54 11 5555-1111"
+},
+"camion": {
+"patente": "AB123CD",
+"codigo_camion": "TRK-9981",
+"descripcion": "Camión cisterna aluminio",
+"cisternado": [1,0,1,1]
+},
+"chofer": {
+"documento": "30111222",
+"codigo_chofer": "DRV-30111222",
+"nombre": "Juan",
+"apellido": "Pérez"
+},
+"producto": {
+"nombre": "Harina Integral 000",
+"codigo_producto": "PROD-77661",
+"descripcion": "Harina trigo integral"
+}
+}
+
+-------------------------------------
+
+3- Ejemplo usando alias alternativos (code, to_load, scheduled_time, customer, truck, driver, product)
+(Valida que los nombres alternativos también se toman)
+
+{
+"code": "SAP-TEST-ALIAS",
+"to_load": 10000,
+"scheduled_time": "2025-11-20T09:15:00-0300",
+"customer": {
+"business_name": "Cliente Alias SA",
+"client_code": "C-A-001"
+},
+"truck": {
+"license_plate": "CD456EF",
+"truck_code": "TRK-AL-02"
+},
+"driver": {
+"document_id": "40222333",
+"driver_code": "DRV-40222333",
+"name": "Mario",
+"surname": "Gomez"
+},
+"product": {
+"name": "Aceite de Soja",
+"product_code": "PRD-SOJA-01"
+}
+}
+
+------------------------------------------
 
 Nuestro sistema externo es SAP, para el caso de las clases, eran Cli1 y Cli2, clase de referencia 2025-09-30
 Aplicamos un Deserializador para el JSON que viene del sistema externo (SAP), me fije en las clases extras del dia.

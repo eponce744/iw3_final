@@ -27,10 +27,6 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    // Código externo para integración con sistemas terceros (opcional)
-    @Column(name = "codigo_externo", length = 100, unique = true, nullable = true)
-    private String codigoExterno;
-
     // Nombre obligatorio
     @Column(nullable = false, length = 200, unique = true)
     private String nombre;

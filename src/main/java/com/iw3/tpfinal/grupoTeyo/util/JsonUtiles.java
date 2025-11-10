@@ -1,6 +1,10 @@
 package com.iw3.tpfinal.grupoTeyo.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.Locale;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -96,5 +100,95 @@ public final class JsonUtiles {
 			r = defaultValue;
 		return r;
 	}
+
+	public static JsonNode getNode(JsonNode node, String[] attrs, JsonNode defaultValue) {
+		JsonNode targetNode = null;
+
+        for (String attr : attrs) {
+            if (node.has(attr) && node.get(attr).isObject()) {
+                targetNode = node.get(attr);
+                break;
+            }
+        }
+		if(targetNode == null) {
+			return defaultValue;
+		}
+		
+		return targetNode;
+	}
+
+	public static Long getLong(JsonNode node, String[] attrs, Long defaultValue) {
+		Long r = null;
+		for (String attr : attrs) {
+			if (node.get(attr) != null && node.get(attr).isLong()) {
+				r = node.get(attr).asLong();
+				break;
+			}
+		}
+		if (r == null)
+			r = defaultValue;
+		return r;
+	}
+
+	public static int[] getInt(JsonNode node, String[] attrs, int defaultValue) {
+		if (node == null || attrs == null) {
+        	return new int[]{ defaultValue };
+    	}
+	
+    	for (String attr : attrs) {
+    	    JsonNode attrNode = node.get(attr);
+    	    if (attrNode != null && attrNode.isArray()) {
+    	        int[] result = new int[attrNode.size()];
+    	        for (int i = 0; i < attrNode.size(); i++) {
+    	            result[i] = attrNode.get(i).asInt();
+    	        }
+    	        return result;
+    	    }
+    	}
+
+    	return new int[]{ defaultValue };
+	}
+
+    public static Date getDate(JsonNode node, String[] attrs, String defaultValue) {
+        Date parsedDate = null;
+
+        // Formatos de fecha para intentar
+        SimpleDateFormat[] formats = {
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault()), // Con zona horaria
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())   // Sin zona horaria
+        };
+
+        // Intentar obtener la fecha desde uno de los atributos
+        for (String attr : attrs) {
+            if (node.get(attr) != null) {
+                String dateStr = node.get(attr).asText();
+                for (SimpleDateFormat format : formats) {
+                    try {
+                        parsedDate = format.parse(dateStr);
+                        if (parsedDate != null) {
+                            return parsedDate; // Si parsea correctamente, devolvemos la fecha
+                        }
+                    } catch (ParseException e) {
+                        // Continuar con el siguiente formato si falla el parseo
+                    }
+                }
+            }
+        }
+
+        // Si no se encontró un valor válido, intentar con el valor por defecto
+        if (defaultValue != null) {
+            for (SimpleDateFormat format : formats) {
+                try {
+                    parsedDate = format.parse(defaultValue);
+                    if (parsedDate != null) {
+                        return parsedDate; // Si parsea el default, devolverlo
+                    }
+                } catch (ParseException e) {
+                    //  Si falla el default, seguir intentando con otros formatos
+                }
+            }
+        }
+        return parsedDate; // Si no se pudo parsear, devolver null
+    }
 
 }
