@@ -7,7 +7,7 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 
 public interface IOrdenCli2Business {
 
-    Orden registrarPesajeInicial(String numeroOrden, double pesoInicial) throws BusinessException, NotFoundException, FoundException;
+    Orden registrarPesajeInicial(String numeroOrden, Double pesajeInicial) throws BusinessException, NotFoundException;
 
-    Orden registrarPesajeFinal(String numeroOrden, double pesoFinal) throws BusinessException, NotFoundException, FoundException;
+    Orden registrarPesajeFinal(String numeroOrden, Double pesajeFinal) throws BusinessException, NotFoundException;
 }

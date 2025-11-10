@@ -61,13 +61,21 @@ public class Orden {
 
     private double finalPesaje;
 
+    private double masaAcumuladaFinal;
+
+    private double densidadProductoFinal;
+
+    private double temperaturaProductoFinal;
+
+    private double caudalFinal;
+
 
     @Enumerated(EnumType.STRING)
     @Column()
     private Estado estado;
 
     @Column(unique = true)
-    private Integer activarPassword;
+    private Integer activacionPassword;
 
 
 	/*Kilos a cargar*/

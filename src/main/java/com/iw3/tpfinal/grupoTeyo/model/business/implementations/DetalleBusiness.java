@@ -72,5 +72,19 @@ public class DetalleBusiness implements IDetalleBusiness{
         }
     }
 
+    public Double calcularPromedioTemperatura(Long ordenId) {
+        Double avgTemp = detalleDAO.findAverageTemperaturaByOrdenId(ordenId);
+        return avgTemp != null ? avgTemp : 0.0;
+    }
+
+    public Double calcularPromedioDensidad(Long orderId) {
+        Double avgDensidad = detalleDAO.findAverageDensidadByOrdenId(orderId);
+        return avgDensidad != null ? avgDensidad : 0.0;
+    }
+
+    public Double calcularPromedioCaudal(Long orderId) {
+        Double avgCaudal = detalleDAO.findAverageCaudalByOrdenId(orderId);
+        return avgCaudal != null ? avgCaudal : 0.0;
+    }
 
 }
