@@ -6,9 +6,9 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.*;
 
 public interface IOrdenCli3Business {
 
-    public Orden validacionPassword(int password) throws NotFoundException, BusinessException;
+    public Orden validacionPassword(int password) throws NotFoundException, BusinessException, InvalidityException;
 
-    public Orden recepcionDetalles(Detalle detalle) throws NotFoundException, BusinessException, FoundException;
+    public Orden recepcionDetalles(Detalle detalle) throws NotFoundException, BusinessException, FoundException, UnProcessableException, InvalidityException;
 
-    public Orden cierreOrden(Long ordenId) throws BusinessException, NotFoundException;
+    public Orden cierreOrden(Long ordenId) throws BusinessException, NotFoundException, InvalidityException;
 }

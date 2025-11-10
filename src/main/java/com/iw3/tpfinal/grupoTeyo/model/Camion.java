@@ -35,6 +35,6 @@ public class Camion {
 	private String descripcion;
 	
 	@Column
-	private ArrayList<Integer> cisternado;
+	private int[] cisternado;
 
 }

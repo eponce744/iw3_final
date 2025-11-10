@@ -66,7 +66,7 @@ public class OrdenCli2Business implements IOrdenCli2Business {
         orden.setEstado(Orden.Estado.PESAJE_FINAL_REGISTRADO);
 
         Double pesajeInicial = orden.getInicialPesaje();
-        Double cargaProducto = orden.getMasaAcumuladaFinal();
+        Double cargaProducto = orden.getUltimaMasaAcumulada();
         Double totalPesaje = pesajeFinal - pesajeInicial;
         Double diferenciaCaudal = cargaProducto - totalPesaje;
         Double temperaturaPromedio = detalleBusiness.calcularPromedioTemperatura(orden.getId());

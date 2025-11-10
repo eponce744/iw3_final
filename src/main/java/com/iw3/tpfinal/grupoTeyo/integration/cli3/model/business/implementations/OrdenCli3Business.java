@@ -11,110 +11,90 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
-/*  VER QUE SE PUEDE APLICAR Y QUE NO
 @Service
 @Slf4j
 public class OrdenCli3Business implements IOrdenCli3Business {
 
 	@Autowired
-    private OrdenRepository orderDAO;
+    private OrdenRepository ordenDAO;
 
     @Autowired
-    private OrdenBusiness orderBusiness;
+    private OrdenBusiness ordenBusiness;
 
     @Override
-    public Orden validacionPassword(int password) throws NotFoundException, BusinessException {
+    public Orden validacionPassword(int password) throws NotFoundException, BusinessException, InvalidityException {
         Optional<Orden> orden;
 
+        //Buscamos la orden a partir del Password recibido y 
+        //tambien verificamos que la orden esté en estado 2 (con el pesaje inicial registrado)
         try {
-      //      order = ordenDAO.findByActivatePassword(password); Agregar esto al OrdenRepository
+        	orden = ordenDAO.findByActivarPassword(password);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new BusinessException("Error al recuperar orden", e);
         }
 
         if (orden.isEmpty()) {
-            throw new NotFoundException("Orden no econtrada");
+            throw new NotFoundException("Orden no encontrada");
         }
-        // checkOrderStatus(order.get()); Agregar esto al OrdenRepository si es necesario
+     
+        chequeoEstadoOrden(orden.get());
         return orden.get();
     }
 
     @Override
-    public Order receiveDetails(Detail detail) throws NotFoundException, BusinessException, UnProcessableException, ConflictException {
-        Order orderFound = orderBusiness.load(detail.getOrder().getId());
+    public Orden recepcionDetalles(Detalle detalle) throws NotFoundException, BusinessException, UnProcessableException, InvalidityException {
+        Orden ordenEncontrada = ordenBusiness.load(detalle.getOrden().getId());
 
-        // Validaciones de negocio
-        if (orderFound.getStatus() != Order.Status.REGISTERED_INITIAL_WEIGHING) {
-            throw new ConflictException("Estado de orden no válido");
+        // Validaciones del estado de la Orden
+        if (ordenEncontrada.getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {
+            throw new InvalidityException("Estado de orden no válido");
         }
-        if (detail.getFlowRate() < 0) {
+        if (detalle.getCaudal() < 0) {
             throw new UnProcessableException("Caudal no válido");
         }
-        if (detail.getAccumulatedMass() < orderFound.getLastAccumulatedMass()) {
+        if (detalle.getMasaAcumulada() < ordenEncontrada.getUltimaMasaAcumulada()) {
             throw new UnProcessableException("Masa acumulada no válida");
         }
-        if (detail.getTemperature() > orderFound.getProduct().getThresholdTemperature()) {
-            if (!alarmBusiness.isAlarmAccepted(orderFound.getId())) {
-                applicationEventPublisher.publishEvent(new AlarmEvent(detail, AlarmEvent.TypeEvent.TEMPERATURE_EXCEEDED));
-            }
-        }
 
-        Date currentTime = new Date(System.currentTimeMillis());
-        DetailWsWrapper detailWsWrapper = new DetailWsWrapper();
+        // Actualizacion de cabecera de la Orden
+        ordenEncontrada.setUltimaMasaAcumulada(detalle.getMasaAcumulada());
+        ordenEncontrada.setUltimaDensidad(detalle.getDensidad());
+        ordenEncontrada.setUltimaTemperatura(detalle.getTemperatura());
+        ordenEncontrada.setUtimoCaudal(detalle.getCaudal());
+        ordenDAO.save(ordenEncontrada);
 
-        // Actualizacion de cabecera de orden
-        orderFound.setLastTimeStamp(currentTime);
-        orderFound.setLastAccumulatedMass(detail.getAccumulatedMass());
-        orderFound.setLastDensity(detail.getDensity());
-        orderFound.setLastTemperature(detail.getTemperature());
-        orderFound.setLastFlowRate(detail.getFlowRate());
-        orderDAO.save(orderFound);
-
-        // todo topico para graficos en tiempo real
-        detailWsWrapper.setTimeStamp(currentTime);
-        detailWsWrapper.setAccumulatedMass(detail.getAccumulatedMass());
-        detailWsWrapper.setDensity(detail.getDensity());
-        detailWsWrapper.setTemperature(detail.getTemperature());
-        detailWsWrapper.setFlowRate(detail.getFlowRate());
-        wSock.convertAndSend("/topic/details/graphs/order/" + orderFound.getId(), detailWsWrapper);
-
-        // Evento para manejar el almacenamiento de detalle
-        applicationEventPublisher.publishEvent(new DetailEvent(detail, DetailEvent.TypeEvent.SAVE_DETAIL));
-
-        return orderFound;
+        return ordenEncontrada;
     }
 
     @Override
-    public Order closeOrder(Long orderId) throws BusinessException, NotFoundException, ConflictException {
-        Optional<Order> order;
+    public Orden cierreOrden(Long ordenId) throws BusinessException, NotFoundException, InvalidityException {
+        Optional<Orden> orden;
 
         try {
-            order = orderDAO.findByIdAndStatus(orderId, Order.Status.REGISTERED_INITIAL_WEIGHING);
+            orden = ordenDAO.findByIdAndEstado(ordenId, Orden.Estado.PESAJE_INICIAL_REGISTRADO);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new BusinessException("Error al recuperar orden", e);
         }
-        if (order.isEmpty()) {
+        if (orden.isEmpty()) {
             throw new NotFoundException("Orden no econtrada");
         }
-        checkOrderStatus(order.get());
-        order.get().setStatus(Order.Status.ORDER_CLOSED);
-        order.get().setActivatePassword(null);
-        return orderDAO.save(order.get());
+        //Chequeamos que la orden este en estado "Pesaje inicial registrado"
+        chequeoEstadoOrden(orden.get());
+        //Cambiamos el estado de la orden a "Cerrada"
+        orden.get().setEstado(Orden.Estado.CERRADA_PARA_CARGA);
+        //Desactivamos el ingreso de Password para la carga de la orden
+        orden.get().setActivarPassword(null);
+        return ordenDAO.save(orden.get());
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////// UTILIDADES  ////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void checkOrderStatus(Order order) throws ConflictException {
-        if (order.getStatus() != Order.Status.REGISTERED_INITIAL_WEIGHING) {
-            throw new ConflictException("Estado de orden no válido");
+    
+    private void chequeoEstadoOrden(Orden orden) throws InvalidityException {
+        if (orden.getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {
+            throw new InvalidityException("Estado de orden no válido");
         }
     }
 	
-}*/
+}

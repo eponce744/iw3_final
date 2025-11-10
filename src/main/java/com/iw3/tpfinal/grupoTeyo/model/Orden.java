@@ -57,17 +57,9 @@ public class Orden {
 	@Column(columnDefinition = "DATETIME",nullable = true)
 	private Date fechaPesajeFinal;
 
-    private double inicialPesaje;
+    private Double inicialPesaje;
 
-    private double finalPesaje;
-
-    private double masaAcumuladaFinal;
-
-    private double densidadProductoFinal;
-
-    private double temperaturaProductoFinal;
-
-    private double caudalFinal;
+    private Double finalPesaje;
 
 
     @Enumerated(EnumType.STRING)

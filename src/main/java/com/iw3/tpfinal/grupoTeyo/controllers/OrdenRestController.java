@@ -21,8 +21,19 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @RestController
 @RequestMapping(Constants.URL_ORDENES)
+@Tag(name = "Orden", description = "API de gestión de órdenes y ciclo de carga (puntos 1–5).")
+@SecurityRequirement(name = "bearerAuth")
 public class OrdenRestController {
 
     //Creo una instancia de la interface de Orden Business
@@ -31,7 +42,11 @@ public class OrdenRestController {
     @Autowired
     private IStandartResponseBusiness response;
 
-    //Listar todas las ordenes
+    @Operation(summary = "Listar órdenes", description = "Devuelve la lista completa de órdenes.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista devuelta OK"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> list(){
         try {
@@ -42,9 +57,16 @@ public class OrdenRestController {
         }
     }
 
-    //Traer una orden por su ID
+    @Operation(summary = "Obtener orden por id", description = "Devuelve una orden por su identificador numérico.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Orden encontrada"),
+        @ApiResponse(responseCode = "404", description = "No encontrada"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> loadOrden(@PathVariable long id){
+    public ResponseEntity<?> loadOrden(
+        @Parameter(in = ParameterIn.PATH, name = "id", schema = @Schema(type = "integer"), required = true, description = "Identificador de la orden.")
+        @PathVariable long id){
         try{
             return new ResponseEntity<>(ordenBusiness.load(id), HttpStatus.OK);
         }catch (BusinessException e){
@@ -55,13 +77,20 @@ public class OrdenRestController {
         }
     }
 
-    //Agregar una nueva orden
+    @Operation(summary = "Agregar nueva orden", description = "Crea una nueva orden (puede usarse para sincronización desde sistemas externos). Devuelve Location con la URL del recurso.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Orden creada"),
+        @ApiResponse(responseCode = "302", description = "Orden ya existente (Found)"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
     @PostMapping(value = "")
-    public ResponseEntity<?> addOrden(@RequestBody Orden orden){
+    public ResponseEntity<?> addOrden(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Objeto Orden", required = true)
+        @RequestBody Orden orden){
         try{
-            Orden response = ordenBusiness.add(orden);
+            Orden resp = ordenBusiness.add(orden);
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("location", Constants.URL_ORDENES + "/" + response.getId());
+            responseHeaders.set("location", Constants.URL_ORDENES + "/" + resp.getId());
             return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
         }catch (BusinessException e){
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
@@ -72,8 +101,16 @@ public class OrdenRestController {
         }
     }
 
+    @Operation(summary = "Actualizar orden", description = "Actualiza los datos de una orden existente.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Actualizado OK"),
+        @ApiResponse(responseCode = "404", description = "No encontrada"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
     @PutMapping(value = "")
-    public ResponseEntity<?> updateOrden(@RequestBody Orden orden){
+    public ResponseEntity<?> updateOrden(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Objeto Orden actualizado", required = true)
+        @RequestBody Orden orden){
         try{
             ordenBusiness.update(orden);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -85,8 +122,16 @@ public class OrdenRestController {
         }
     }
 
+    @Operation(summary = "Eliminar orden", description = "Elimina una orden por su id.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Eliminado"),
+        @ApiResponse(responseCode = "404", description = "No encontrada"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteOrden(@PathVariable long id){
+    public ResponseEntity<?> deleteOrden(
+        @Parameter(in = ParameterIn.PATH, name = "id", schema = @Schema(type = "integer"), required = true, description = "Identificador de la orden.")
+        @PathVariable long id){
         try{
             ordenBusiness.delete(id);
             return new ResponseEntity<String>(HttpStatus.OK);
