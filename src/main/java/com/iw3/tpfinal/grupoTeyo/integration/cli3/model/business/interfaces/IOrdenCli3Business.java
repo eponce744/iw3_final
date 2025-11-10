@@ -10,5 +10,5 @@ public interface IOrdenCli3Business {
 
     public Orden recepcionDetalles(Detalle detalle) throws NotFoundException, BusinessException, FoundException, UnProcessableException, InvalidityException;
 
-    //public Orden cierreOrden(Long ordenId) throws BusinessException, NotFoundException, InvalidityException;
+    public Orden cierreOrden(Long ordenId) throws BusinessException, NotFoundException, InvalidityException;
 }

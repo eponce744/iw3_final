@@ -48,4 +48,13 @@ public class OrdenCli3RestController extends BaseRestController{
         responseHeaders.set("Order-Id", String.valueOf(orden.getId()));
         return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
     }
+    
+    @SneakyThrows
+    @PostMapping("/cerrar")
+    public ResponseEntity<?> closeOrder(@RequestHeader("OrderId") Long orderId) {
+        Orden orden = ordenCli3Business.cierreOrden(orderId);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Order-Id", String.valueOf(orden.getId()));
+        return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+    }
 }

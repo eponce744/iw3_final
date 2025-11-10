@@ -28,8 +28,8 @@ public class OrdenCli3Business implements IOrdenCli3Business {
 	@Autowired
     private OrdenSapRepository ordenSapDAO;
 	
-	//@Autowired
-	//private OrdenRepository ordenDAO;
+	@Autowired
+	private OrdenRepository ordenDAO;
 
     @Autowired
     private IOrdenBusiness ordenBusiness;
@@ -97,21 +97,15 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         } catch (FoundException e) {
         }
         
-        
-        
-        
-        
-        
-        
-        
-        
+
 
         return ordenEncontrada;
     }
-/*
+
+    
     @Override
     public Orden cierreOrden(Long ordenId) throws BusinessException, NotFoundException, InvalidityException {
-        /*Optional<Orden> orden;
+        Optional<Orden> orden;
 
         try {
             orden = ordenDAO.findByIdAndEstado(ordenId, Orden.Estado.PESAJE_INICIAL_REGISTRADO);
@@ -122,20 +116,11 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         if (orden.isEmpty()) {
             throw new NotFoundException("Orden no econtrada");
         }
-        //Chequeamos que la orden este en estado "Pesaje inicial registrado"
-        chequeoEstadoOrden(orden.get());
         //Cambiamos el estado de la orden a "Cerrada"
         orden.get().setEstado(Orden.Estado.CERRADA_PARA_CARGA);
         //Desactivamos el ingreso de Password para la carga de la orden
-        orden.get().setActivarPassword(null);
+        orden.get().setActivacionPassword(null);
         return ordenDAO.save(orden.get());
-return null;
         }
-        */
-    /*private void chequeoEstadoOrden(Orden orden) throws InvalidityException {
-        if (orden.getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {
-            throw new InvalidityException("Estado de orden no válido");
-        }
-    }*/
 	
 }
