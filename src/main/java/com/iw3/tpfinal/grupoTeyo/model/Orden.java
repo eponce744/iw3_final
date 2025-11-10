@@ -77,10 +77,7 @@ public class Orden {
 	/*Peso camino vacio*/
 	private Double tara;
 	
-    // Último estado de la carga
-    private Date lastTimeStamp;
-
-    private Double ultimaMasaAcumulada;
+    private Double ultimaMasaAcumulada = 0.0;
 
     private Double ultimaDensidad;
 

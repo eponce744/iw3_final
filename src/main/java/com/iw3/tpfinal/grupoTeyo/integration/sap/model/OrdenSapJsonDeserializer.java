@@ -65,6 +65,12 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 	@Override
 	public OrdenSap deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
 		OrdenSap r = new OrdenSap();
+		//Valores iniciales de la orden
+		r.setUltimaMasaAcumulada(0.0);
+		r.setUltimaDensidad(0.0);
+		r.setUltimaTemperatura(0.0);
+		r.setUtimoCaudal(0.0);
+		
 		JsonNode node = jp.getCodec().readTree(jp); //Instancia de un objeto que representa el JSON recibido
 		
 		//***Recepcion y guardado del valor recibido que se encuentre bajo el nombre de alguno de los tipos que se pasa en el get (getString, getDouble, etc)
