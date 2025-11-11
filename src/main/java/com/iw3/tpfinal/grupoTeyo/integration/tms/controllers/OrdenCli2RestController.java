@@ -63,7 +63,7 @@ public class OrdenCli2RestController {
 			+ "Al registrarse la tara se genera y asocia a la orden una contraseña de activación (entero de 5 dígitos).\n\n"
 			+ "Request Headers:\n" + " - Patente: patente del camión (string)\n"
 			+ " - Peso-Inicial: peso registrado en kg (double)\n\n" + "Response:\n"
-			+ " - 200 OK: cuerpo con la contraseña de activación (texto) y header 'Id-Orden' con el id interno de la orden.\n"
+			+ " - 200 OK: JSON con la password, el codigo externo de la orden y header 'Id-Orden' con el id interno de la orden.\n"
 			+ " - 400/404/500: según error (payload inválido, orden no encontrada, error interno).")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Tara registrada, devuelve password y header Id-Orden"),
