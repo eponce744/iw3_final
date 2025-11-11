@@ -15,6 +15,7 @@ import com.iw3.tpfinal.grupoTeyo.util.JsonUtiles;
 import lombok.SneakyThrows;
 
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -78,12 +79,14 @@ public class OrdenCli2RestController {
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("Id-Orden", String.valueOf(orden.getId()));
 
-			// Devolvemos texto plano dentro de un JSON, para devolver la password dentro de
-			// un Json y
-			// tener compatibidad con el objeto de respuesta de las excepciones
-			// StandartResponseBusiness (response)
-			return ResponseEntity.ok().headers(responseHeaders)
-					.body(Map.of("Password", orden.getActivacionPassword().toString()));
+			// Armamos un cuerpo JSON estable, incluyendo CodSap cuando la orden es SAP
+			Map<String, Object> body = new LinkedHashMap<>();
+			body.put("Password", orden.getActivacionPassword());
+			if (orden instanceof com.iw3.tpfinal.grupoTeyo.integration.sap.model.OrdenSap sap) {
+				body.put("CodSap", sap.getCodSap());
+			}
+
+			return ResponseEntity.ok().headers(responseHeaders).body(body);
 		} catch (NotFoundException e) {
 			return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
 		} catch (BusinessException e) {

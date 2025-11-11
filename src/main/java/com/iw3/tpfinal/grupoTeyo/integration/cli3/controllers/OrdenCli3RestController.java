@@ -108,14 +108,17 @@ public class OrdenCli3RestController extends BaseRestController {
 			@ApiResponse(responseCode = "400", description = "Solicitud inválida o estado no permitido"),
 			@ApiResponse(responseCode = "404", description = "Orden no encontrada"),
 			@ApiResponse(responseCode = "500", description = "Error interno del servidor") })
-	@PostMapping(value = "/cerrar")
+	@PostMapping(value = "/cerrar", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> closeOrder(
 			@Parameter(in = ParameterIn.HEADER, name = "OrderId", description = "Id interno de la orden (long).", required = true, schema = @Schema(type = "integer", format = "int64")) @RequestHeader("OrderId") Long orderId) {
 		try {
 			Orden orden = ordenCli3Business.cierreOrden(orderId);
+			// Construimos un JSON mínimo con la patente del camión asociado
+			String patente = orden.getCamion() != null ? orden.getCamion().getPatente() : null;
+			String json = "{\"orderId\":" + orden.getId() + ",\"patente\":" + (patente == null ? "null" : ("\""+patente+"\"")) + "}";
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("Order-Id", String.valueOf(orden.getId()));
-			return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+			return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
 		} catch (NotFoundException e) {
 			return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
 		} catch (BusinessException e) {
