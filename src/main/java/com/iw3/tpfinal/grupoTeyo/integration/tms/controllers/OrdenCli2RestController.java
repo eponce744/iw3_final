@@ -1,8 +1,12 @@
 package com.iw3.tpfinal.grupoTeyo.integration.tms.controllers;
 
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
+import com.iw3.tpfinal.grupoTeyo.integration.cli3.model.OrdenCli3SlimV1JsonSerializer;
 import com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.interfaces.IOrdenCli2Business;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
+import com.iw3.tpfinal.grupoTeyo.util.JsonUtiles;
+
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -36,5 +40,26 @@ public class OrdenCli2RestController {
         responseHeaders.set("Id-Orden", String.valueOf(orden.getId()));
         return new ResponseEntity<>(orden.getActivacionPassword().toString(), responseHeaders, HttpStatus.OK);
     }
+    
+    @SneakyThrows
+    @PostMapping(value = "/finalizar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity finalizarOrden(
+            @RequestHeader("Patente") String patente,
+            @RequestHeader("Peso-Final") Double pesoFinal) {
+        Orden orden = ordenCli2Business.registrarPesajeFinal(patente,pesoFinal);
+        String result = JsonUtiles.getObjectMapper(Orden.class, ser, null).writeValueAsString(orden);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
+    /*@SneakyThrows
+    @PostMapping(value = "/finalizar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity finalizarOrden(
+            @RequestHeader("Patente") String patente,
+            @RequestHeader("Peso-Final") Double pesoFinal) {
+        Orden orden = ordenCli2Business.registrarPesajeFinal(patente,pesoFinal);
+        StdSerializer<Orden> ser = new OrdenCli3SlimV1JsonSerializer(Orden.class, false);
+        String result = JsonUtiles.getObjectMapper(Orden.class, ser, null).writeValueAsString(orden);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    */
 }

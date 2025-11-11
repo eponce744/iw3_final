@@ -66,8 +66,13 @@ public class OrdenCli3Business implements IOrdenCli3Business {
     @Override
     public Orden recepcionDetalles(Detalle detalle) throws NotFoundException, BusinessException, UnProcessableException, InvalidityException {
         //Traemos la orden asociada al Detalle, para asegurarnos de que ese Detalle esta asociado a una Orden
+    	Date currentTime = new Date(System.currentTimeMillis());
     	Orden ordenEncontrada = ordenBusiness.load(detalle.getOrden().getId());
 
+    	if (ordenEncontrada.getFechaInicioCarga() == null) {
+    		ordenEncontrada.setFechaInicioCarga(currentTime);
+    	}
+    	
         // Validaciones del Detalle
         if (ordenEncontrada.getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {
             throw new InvalidityException("Estado de orden no válido");
@@ -75,11 +80,13 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         else if (detalle.getCaudal() < 0) {
             throw new UnProcessableException("Caudal no válido");
         }
+        else if (detalle.getDensidad() < 0 || detalle.getDensidad() > 1) {
+        	throw new UnProcessableException("Densidad no válida");
+        }
         else if (detalle.getMasaAcumulada() < ordenEncontrada.getUltimaMasaAcumulada()) {
             throw new UnProcessableException("Masa acumulada no válida");
         }
 
-        Date currentTime = new Date(System.currentTimeMillis());
         
         // Actualizacion de la Orden
         ordenEncontrada.setUltimaMasaAcumulada(detalle.getMasaAcumulada());

@@ -65,13 +65,22 @@ public class OrdenCli2Business implements IOrdenCli2Business {
     }
 
     @Override
-    public Orden registrarPesajeFinal(String numeroOrden, Double pesajeFinal) throws BusinessException, NotFoundException {
-        Optional<Orden> ordenActiva = Optional.empty();
+    public Orden registrarPesajeFinal(String patente, Double pesajeFinal) throws BusinessException, NotFoundException {
+        Optional<Orden> ordenActiva;
 
+        try {
+            ordenActiva = ordenRepository.findByCamion_PatenteAndEstado(patente, Orden.Estado.CERRADA_PARA_CARGA);
+        } catch (Exception e) {
+            throw BusinessException.builder().ex(e).build();
+        }
+        if (ordenActiva.isEmpty()) {
+            throw NotFoundException.builder().message("No se encuentra orden para cargar en camion con patente " + patente).build();
+        }
+        
         Orden orden = ordenActiva.get();
         orden.setFinalPesaje(pesajeFinal);
         orden.setFechaPesajeFinal(new Date(System.currentTimeMillis()));
-        orden.setEstado(Orden.Estado.PESAJE_FINAL_REGISTRADO);
+        orden.setEstado(Orden.Estado.FINALIZADA);
 
         Double pesajeInicial = orden.getInicialPesaje();
         Double cargaProducto = orden.getUltimaMasaAcumulada();
