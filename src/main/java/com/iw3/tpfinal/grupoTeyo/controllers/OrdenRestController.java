@@ -152,8 +152,24 @@ public class OrdenRestController {
     private IDetalleBusiness detalleBusiness;
 
     @SneakyThrows
+    @Operation(
+        summary = "Conciliación de orden",
+        description = "Genera y devuelve la conciliación para una orden identificada por su id interno. " +
+                      "La conciliación sólo puede solicitarse para órdenes en estado 4 (Finalizada). " +
+                      "Devuelve: pesaje inicial (tara), pesaje final, producto cargado (último valor de masa acumulada), " +
+                      "neto por balanza (pesaje final - pesaje inicial), diferencia entre balanza y caudalímetro, " +
+                      "promedio de temperatura, promedio de densidad y promedio de caudal según datos almacenados. " +
+                      "Si la orden no está en estado 4 se devolverá 400 o 404 según corresponda."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Conciliación generada correctamente"),
+        @ApiResponse(responseCode = "400", description = "Solicitud inválida (por ejemplo: orden en estado no finalizada)"),
+        @ApiResponse(responseCode = "404", description = "Orden no encontrada"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
     @GetMapping(value = "/conciliacion/{idOrden}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> conciliacion(
+            @Parameter(in = ParameterIn.PATH, name = "idOrden", schema = @Schema(type = "integer"), required = true, description = "Identificador interno de la orden para la cual se solicita la conciliación (debe estar en estado 4).")
             @PathVariable long idOrden) {
         Orden orden = ordenBusiness.conciliacion(idOrden);
         StdSerializer<Orden> ser = new OrdenTmsSlimV1JsonSerializer(Orden.class, false, detalleBusiness);
