@@ -19,5 +19,10 @@ public interface IDetalleBusiness {
     // Método para agregar un nuevo detalle
     public Detalle add(Detalle detalle) throws FoundException, BusinessException;
 
+    // Métricas agregadas usadas en serializadores TMS
+    Double calcularPromedioTemperatura(Long ordenId);
+    Double calcularPromedioDensidad(Long ordenId);
+    Double calcularPromedioCaudal(Long ordenId);
+
 
 }

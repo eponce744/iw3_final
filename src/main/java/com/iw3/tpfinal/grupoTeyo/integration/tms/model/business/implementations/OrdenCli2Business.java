@@ -2,7 +2,6 @@ package com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.implementations
 
 import com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.interfaces.IOrdenCli2Business;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
-import com.iw3.tpfinal.grupoTeyo.model.Producto;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.implementations.DetalleBusiness;
@@ -23,9 +22,6 @@ public class OrdenCli2Business implements IOrdenCli2Business {
 
     @Autowired
     private IOrdenBusiness ordenBusiness;
-
-    @Autowired
-    private DetalleBusiness detalleBusiness;
 
     /*
      * Este metodo recibe una patente de Camion y su Tara, corrobora que esté 
@@ -82,16 +78,8 @@ public class OrdenCli2Business implements IOrdenCli2Business {
         orden.setFechaPesajeFinal(new Date(System.currentTimeMillis()));
         orden.setEstado(Orden.Estado.FINALIZADA);
 
-        Double pesajeInicial = orden.getInicialPesaje();
-        Double cargaProducto = orden.getUltimaMasaAcumulada();
-        Double totalPesaje = pesajeFinal - pesajeInicial;
-        Double diferenciaCaudal = cargaProducto - totalPesaje;
-        Double temperaturaPromedio = detalleBusiness.calcularPromedioTemperatura(orden.getId());
-        Double densidadPromedio = detalleBusiness.calcularPromedioDensidad(orden.getId());
-        Double caudalPromedio = detalleBusiness.calcularPromedioCaudal(orden.getId());
-        Producto producto = orden.getProducto();
-
         ordenBusiness.update(orden);
+
         return orden;
     }
 }

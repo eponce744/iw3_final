@@ -2,7 +2,8 @@ package com.iw3.tpfinal.grupoTeyo.integration.tms.controllers;
 
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
-import com.iw3.tpfinal.grupoTeyo.integration.cli3.model.OrdenCli3SlimV1JsonSerializer;
+import com.iw3.tpfinal.grupoTeyo.integration.tms.model.OrdenTmsSlimV1JsonSerializer;
+import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IDetalleBusiness;
 import com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.interfaces.IOrdenCli2Business;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.util.JsonUtiles;
@@ -32,7 +33,7 @@ public class OrdenCli2RestController {
      * */
     @SneakyThrows
     @PostMapping(value = "/pesaje-inicial", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity registrarPesajeInicial(
+    public ResponseEntity<?> registrarPesajeInicial(
             @RequestHeader("Patente") String patente,
             @RequestHeader("Peso-Inicial") Double pesoInicial) {
         Orden orden = ordenCli2Business.registrarPesajeInicial(patente, pesoInicial);
@@ -41,12 +42,16 @@ public class OrdenCli2RestController {
         return new ResponseEntity<>(orden.getActivacionPassword().toString(), responseHeaders, HttpStatus.OK);
     }
     
+    @Autowired
+    private IDetalleBusiness detalleBusiness;
+
     @SneakyThrows
     @PostMapping(value = "/finalizar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity finalizarOrden(
+    public ResponseEntity<?> finalizarOrden(
             @RequestHeader("Patente") String patente,
             @RequestHeader("Peso-Final") Double pesoFinal) {
         Orden orden = ordenCli2Business.registrarPesajeFinal(patente,pesoFinal);
+        StdSerializer<Orden> ser = new OrdenTmsSlimV1JsonSerializer(Orden.class, false, detalleBusiness);
         String result = JsonUtiles.getObjectMapper(Orden.class, ser, null).writeValueAsString(orden);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

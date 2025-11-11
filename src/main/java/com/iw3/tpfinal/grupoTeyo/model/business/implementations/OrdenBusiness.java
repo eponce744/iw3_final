@@ -11,6 +11,7 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.persistence.OrdenRepository;
+import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.InvalidityException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,4 +97,14 @@ public class OrdenBusiness implements IOrdenBusiness{
         delete(orden.getId());   
     }
 
+    @Override
+    public Orden conciliacion(long idOrden) throws NotFoundException, BusinessException, InvalidityException {
+        // Usamos el propio método load de esta clase; no inyectamos IOrdenBusiness aquí para evitar NPE
+        Orden ordenRecibida = load(idOrden);
+        if(ordenRecibida.getEstado() != Orden.Estado.FINALIZADA) {
+            throw new InvalidityException("El estado de la orden no es FINALIZADA");
+        }
+        return ordenRecibida;
+    }
+    
 }

@@ -14,17 +14,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
+import com.iw3.tpfinal.grupoTeyo.util.JsonUtiles;
+import com.iw3.tpfinal.grupoTeyo.integration.tms.model.OrdenTmsSlimV1JsonSerializer;
+import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IDetalleBusiness;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.SneakyThrows;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -141,6 +146,19 @@ public class OrdenRestController {
         }catch (NotFoundException e) {
             return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Autowired
+    private IDetalleBusiness detalleBusiness;
+
+    @SneakyThrows
+    @GetMapping(value = "/conciliacion/{idOrden}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> conciliacion(
+            @PathVariable long idOrden) {
+        Orden orden = ordenBusiness.conciliacion(idOrden);
+        StdSerializer<Orden> ser = new OrdenTmsSlimV1JsonSerializer(Orden.class, false, detalleBusiness);
+        String result = JsonUtiles.getObjectMapper(Orden.class, ser, null).writeValueAsString(orden);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
 }

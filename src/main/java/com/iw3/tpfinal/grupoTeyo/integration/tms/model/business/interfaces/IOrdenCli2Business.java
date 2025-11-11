@@ -10,4 +10,5 @@ public interface IOrdenCli2Business {
     Orden registrarPesajeInicial(String patente, Double pesajeInicial) throws BusinessException, NotFoundException;
 
     Orden registrarPesajeFinal(String patente, Double pesajeFinal) throws BusinessException, NotFoundException;
+    
 }

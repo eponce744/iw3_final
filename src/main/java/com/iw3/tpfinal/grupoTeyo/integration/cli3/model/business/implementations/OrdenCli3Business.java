@@ -57,10 +57,10 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         }
 
         Integer contraseniaOrdenSap = orden.getActivacionPassword();
-        if (contraseniaOrdenSap != null && contraseniaOrdenSap == password) {
-            return orden; 
+        if (contraseniaOrdenSap == null || !contraseniaOrdenSap.equals(password)) {
+            throw new InvalidityException("Contraseña incorrecta");
         }
-        return null;
+        return orden;
     }
 
     @Override

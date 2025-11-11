@@ -5,6 +5,7 @@ import java.util.List;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
+import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.InvalidityException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 
 public interface IOrdenBusiness {
@@ -25,4 +26,6 @@ public interface IOrdenBusiness {
     public void delete(long id) throws NotFoundException, BusinessException;
 
     public void delete(Orden orden) throws NotFoundException, BusinessException;
+
+    public Orden conciliacion(long idOrden) throws NotFoundException, BusinessException, InvalidityException;
 }

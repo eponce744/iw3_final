@@ -18,10 +18,10 @@ public interface DetalleRepository extends JpaRepository<Detalle, Long>{
     @Query("SELECT AVG(d.temperatura) FROM Detalle d WHERE d.orden.id = :ordenId")
     Double findAverageTemperaturaByOrdenId(long ordenId);
 
-    @Query("SELECT AVG(d.densidad) FROM detalle d WHERE d.orden.id = :ordenId")
+    @Query("SELECT AVG(d.densidad) FROM Detalle d WHERE d.orden.id = :ordenId")
     Double findAverageDensidadByOrdenId(long ordenId);
 
-    @Query("SELECT AVG(d.caudal) FROM detalle d WHERE d.orden.id = :ordenId")
+    @Query("SELECT AVG(d.caudal) FROM Detalle d WHERE d.orden.id = :ordenId")
     Double findAverageCaudalByOrdenId(long ordenId);
 
 }
