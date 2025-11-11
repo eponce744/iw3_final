@@ -111,7 +111,7 @@ public class OrdenCli3Business implements IOrdenCli3Business {
 
     
     @Override
-    public Orden cierreOrden(Long ordenId) throws BusinessException, NotFoundException, InvalidityException {
+    public Orden cierreOrden(Long ordenId) throws BusinessException, NotFoundException {
         Optional<Orden> orden;
 
         try {
@@ -121,7 +121,7 @@ public class OrdenCli3Business implements IOrdenCli3Business {
             throw new BusinessException("Error al recuperar orden", e);
         }
         if (orden.isEmpty()) {
-            throw new NotFoundException("Orden no econtrada");
+            throw new NotFoundException("Orden no econtrada o no se encuentra en el Estado correcto");
         }
         //Cambiamos el estado de la orden a "Cerrada"
         orden.get().setEstado(Orden.Estado.CERRADA_PARA_CARGA);

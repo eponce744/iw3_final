@@ -3,6 +3,7 @@ package com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.implementations
 import com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.interfaces.IOrdenCli2Business;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
+import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.InvalidityException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.implementations.DetalleBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
@@ -32,7 +33,7 @@ public class OrdenCli2Business implements IOrdenCli2Business {
      * Estado = cambiado a  PESAJE_INICIAL_REGISTRADO
      * */
     @Override
-    public Orden registrarPesajeInicial(String patente, Double pesajeInicial) throws BusinessException, NotFoundException {
+    public Orden registrarPesajeInicial(String patente, Double pesajeInicial) throws BusinessException, NotFoundException, InvalidityException {
         Optional<Orden> ordenEncontrada;
 
         try {
@@ -70,7 +71,7 @@ public class OrdenCli2Business implements IOrdenCli2Business {
             throw BusinessException.builder().ex(e).build();
         }
         if (ordenActiva.isEmpty()) {
-            throw NotFoundException.builder().message("No se encuentra orden para cargar en camion con patente " + patente).build();
+            throw NotFoundException.builder().message("La Orden no tiene el estado correcto o No se encuentra una Orden para el Camion con patente " + patente).build();
         }
         
         Orden orden = ordenActiva.get();

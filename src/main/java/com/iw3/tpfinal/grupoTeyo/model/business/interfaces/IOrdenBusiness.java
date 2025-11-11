@@ -3,6 +3,7 @@ package com.iw3.tpfinal.grupoTeyo.model.business.interfaces;
 import java.util.List;
 
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
+import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BadRequestException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.InvalidityException;
@@ -27,5 +28,5 @@ public interface IOrdenBusiness {
 
     public void delete(Orden orden) throws NotFoundException, BusinessException;
 
-    public Orden conciliacion(long idOrden) throws NotFoundException, BusinessException, InvalidityException;
+    public Orden conciliacion(Long idOrden) throws NotFoundException, BusinessException, InvalidityException, BadRequestException;
 }

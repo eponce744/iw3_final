@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
+import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BadRequestException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.InvalidityException;
@@ -181,10 +182,14 @@ public class OrdenRestController {
         } catch (BusinessException e) {
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (InvalidityException e) {
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.BAD_REQUEST, e, e.getMessage()),
+                    HttpStatus.BAD_REQUEST);
+        }catch (InvalidityException e) {
             return new ResponseEntity<>(response.build(HttpStatus.BAD_REQUEST, e, e.getMessage()),
                     HttpStatus.BAD_REQUEST);
         }
+        
     }
     
 }
