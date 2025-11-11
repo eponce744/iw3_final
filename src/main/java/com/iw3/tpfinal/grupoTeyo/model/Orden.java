@@ -57,6 +57,7 @@ public class Orden {
 	@Column(columnDefinition = "DATETIME",nullable = true)
 	private Date fechaPesajeFinal;
 
+	//El peso inicial registrado en el pesaje inicial (tara)
 	@Column(nullable = true)
     private Double inicialPesaje;
 
@@ -72,10 +73,7 @@ public class Orden {
 
 	/*Kilos a cargar*/
 	private Double preset;
-	
-	/*Peso camino vacio*/
-	private Double tara;
-	
+		
     private Double ultimaMasaAcumulada = 0.0;
 
     private Double ultimaDensidad;
