@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
+import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.InvalidityException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
@@ -169,12 +170,21 @@ public class OrdenRestController {
     })
     @GetMapping(value = "/conciliacion/{idOrden}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> conciliacion(
-            @Parameter(in = ParameterIn.PATH, name = "idOrden", schema = @Schema(type = "integer"), required = true, description = "Identificador interno de la orden para la cual se solicita la conciliación (debe estar en estado 4).")
             @PathVariable long idOrden) {
-        Orden orden = ordenBusiness.conciliacion(idOrden);
-        StdSerializer<Orden> ser = new OrdenTmsSlimV1JsonSerializer(Orden.class, false, detalleBusiness);
-        String result = JsonUtiles.getObjectMapper(Orden.class, ser, null).writeValueAsString(orden);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        try{
+            Orden orden = ordenBusiness.conciliacion(idOrden);
+            StdSerializer<Orden> ser = new OrdenTmsSlimV1JsonSerializer(Orden.class, false, detalleBusiness);
+            String result = JsonUtiles.getObjectMapper(Orden.class, ser, null).writeValueAsString(orden);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (InvalidityException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.BAD_REQUEST, e, e.getMessage()),
+                    HttpStatus.BAD_REQUEST);
+        }
     }
     
 }
