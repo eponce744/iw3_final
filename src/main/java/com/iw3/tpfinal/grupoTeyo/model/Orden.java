@@ -74,7 +74,7 @@ public class Orden {
 	/*Kilos a cargar*/
 	private Double preset;
 		
-    private Double ultimaMasaAcumulada = 0.0;
+    private Double ultimaMasaAcumulada;
 
     private Double ultimaDensidad;
 
