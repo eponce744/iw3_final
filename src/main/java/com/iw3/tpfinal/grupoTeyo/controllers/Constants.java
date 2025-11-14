@@ -18,4 +18,7 @@ public final class Constants {
     public static final String URL_INTEGRATION_SAP = URL_INTEGRATION + "/sap";
     public static final String URL_INTEGRATION_TMS = URL_INTEGRATION + "/tms";
     public static final String URL_INTEGRATION_CLI3 = URL_INTEGRATION + "/cli3";
+    
+    //Login
+    public static final String URL_LOGIN = URL_BASE + "/login";
 }
