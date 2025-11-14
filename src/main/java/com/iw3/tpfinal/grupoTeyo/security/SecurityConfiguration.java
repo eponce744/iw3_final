@@ -1,62 +1,82 @@
 package com.iw3.tpfinal.grupoTeyo.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
+import com.iw3.tpfinal.grupoTeyo.auth.IUserBusiness;
+import com.iw3.tpfinal.grupoTeyo.auth.custom.CustomAuthenticationManager;
+import com.iw3.tpfinal.grupoTeyo.auth.filters.JWTAuthorizationFilter;
+import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-/*
-public class SecurityConfiguration { //Es para eliminar la "autenticación" por defecto que trae spring.
-
-    @Bean	
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // CORS: https://developer.mozilla.org/es/docs/Web/HTTP/CORS 
-        // CSRF: https://developer.mozilla.org/es/docs/Glossary/CSRF
-        http.cors(CorsConfigurer::disable);
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(auth -> auth
-                 // Permitir acceso a la documentación OpenAPI / Swagger y recursos estáticos
-                .requestMatchers(
-                    "/v3/api-docs/**",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/swagger-ui/index.html",
-                    "/webjars/**",
-                    "/v3/api-docs.yaml"
-                ).permitAll()
-                // TODO: ajustar permisos para endpoints públicos si corresponde
-                .anyRequest().authenticated()
-        );
-        return http.build();
-    }
-
-}*/
-
-//PARA VER SIN NINGUNA AUTENTICACIÓN (DESARROLLO LOCAL)
-//@Configuration
-//PARA VER SIN NINGUNA AUTENTICACIÓN (DESARROLLO LOCAL)
 public class SecurityConfiguration {
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            // Disable CSRF and CORS for local development convenience
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(AbstractHttpConfigurer::disable)
-            // Permit everything in development
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+	
+	@Bean
+	PasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-        // Optionally, allow frames (e.g., H2 console) by disabling frame options
-        // http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
+	@Bean
+	WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedMethods("*").allowedHeaders("*").allowedOrigins("*");
+			}
+		};
+	}
+	@Autowired
+	private IUserBusiness userBusiness;
+	@Bean
+	AuthenticationManager authenticationManager() {
+		return new CustomAuthenticationManager(bCryptPasswordEncoder(), userBusiness);
+	}
 
-        return http.build();
-    }
-} 
+   @Bean
+   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		// CORS: https://developer.mozilla.org/es/docs/Web/HTTP/CORS
+		// CSRF: https://developer.mozilla.org/es/docs/Glossary/CSRF
+		
+		http.csrf(AbstractHttpConfigurer::disable);
+		http.authorizeHttpRequests(auth -> auth
+				
+				.requestMatchers(HttpMethod.POST, Constants.URL_LOGIN).permitAll()
+				
+				.requestMatchers("/v3/api-docs/**").permitAll()
+				.requestMatchers("/swagger-ui.html").permitAll()
+				.requestMatchers("/swagger-ui/**").permitAll()
+				
+				.requestMatchers("/ui/**").permitAll()
+				.requestMatchers("/ui/js/**").permitAll()
+				.requestMatchers("/favicon.ico").permitAll()
+				
+				.requestMatchers("/demo/**").permitAll()
+				
+				.anyRequest().authenticated());
+		
+		//http.httpBasic(Customizer.withDefaults());
+		
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager()));
+		
+		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+		return http.build();
+   }
+}
