@@ -1,6 +1,6 @@
-package com.iw3.tpfinal.grupoTeyo.integration.sap.model;
+package com.iw3.tpfinal.grupoTeyo.integration.cli1.model;
 
-import com.iw3.tpfinal.grupoTeyo.model.Chofer;
+import com.iw3.tpfinal.grupoTeyo.model.Producto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,15 +12,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="sap_choferes")
-@PrimaryKeyJoinColumn(name="id_chofer") //PrimaryKey (foranea) de la subclase, apunta a PrimaryKey de Clase principal
+@Table(name="sap_productos")
+@PrimaryKeyJoinColumn(name="id_producto") //PrimaryKey (foranea) de la subclase, apunta a PrimaryKey de Clase principal
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ChoferSap extends Chofer{
+public class ProductoSap extends Producto{
 
 	@Column(nullable=false, unique=true)
-	private String codChoferSap;
+	private String codProductoSap;
 
 }
+

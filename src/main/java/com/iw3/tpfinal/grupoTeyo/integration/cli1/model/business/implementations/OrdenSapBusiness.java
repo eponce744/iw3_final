@@ -1,20 +1,17 @@
-package com.iw3.tpfinal.grupoTeyo.integration.sap.model.business.implementations;
+package com.iw3.tpfinal.grupoTeyo.integration.cli1.model.business.implementations;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.business.interfaces.IOrdenSapBusiness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.OrdenSap;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.OrdenSapJsonDeserializer;
-//import com.iw3.tpfinal.integration.sap.model.OrdenSapSlimView; //Ver que es esto y si lo necesitamos!!!
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.persistence.OrdenSapRepository;
-
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSap;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSapJsonDeserializer;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.business.interfaces.IOrdenSapBusiness;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.persistence.OrdenSapRepository;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 

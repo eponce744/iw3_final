@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.OrdenTmsSlimV1JsonSerializer;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BadRequestException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
@@ -24,7 +25,6 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.JsonUtiles;
-import com.iw3.tpfinal.grupoTeyo.integration.tms.model.OrdenTmsSlimV1JsonSerializer;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IDetalleBusiness;
 
 import io.swagger.v3.oas.annotations.Operation;

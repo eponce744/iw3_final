@@ -65,12 +65,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 			DecodedJWT jwt=null;
 			try {
 				jwt = JWT.require(Algorithm.HMAC512(AuthConstants.SECRET.getBytes())).build().verify(token);
+				//Recordar deshabilitar éstas lineas en Produccion
 				log.trace("Token recibido por '{}'", byHeader ? "header" : "query param");
 				log.trace("Usuario logueado: " + jwt.getSubject());
 				log.trace("Roles: " + jwt.getClaim("roles"));
 				log.trace("Custom JWT Version: " + jwt.getClaim("version").asString());
 				
-				
+				//Spring se entera de que estoy autenticado cuando existe una instancia del objeto Authentication en su contexto
 				Set<Role> roles=new HashSet<Role>();
 				
 				List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();

@@ -1,4 +1,4 @@
-package com.iw3.tpfinal.grupoTeyo.integration.sap.model;
+package com.iw3.tpfinal.grupoTeyo.integration.cli1.model;
 
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import jakarta.persistence.Column;

@@ -1,6 +1,6 @@
-package com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.implementations;
+package com.iw3.tpfinal.grupoTeyo.integration.cli2.model.business.implementations;
 
-import com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.interfaces.IOrdenCli2Business;
+import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.business.interfaces.IOrdenCli2Business;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.InvalidityException;

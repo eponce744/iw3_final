@@ -1,13 +1,13 @@
-package com.iw3.tpfinal.grupoTeyo.integration.tms.controllers;
+package com.iw3.tpfinal.grupoTeyo.integration.cli2.controllers;
 
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
-import com.iw3.tpfinal.grupoTeyo.integration.tms.model.OrdenTmsSlimV1JsonSerializer;
+import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.OrdenTmsSlimV1JsonSerializer;
+import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.business.interfaces.IOrdenCli2Business;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.InvalidityException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IDetalleBusiness;
-import com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.interfaces.IOrdenCli2Business;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.JsonUtiles;
@@ -82,7 +82,7 @@ public class OrdenCli2RestController {
 			// Armamos un cuerpo JSON estable, incluyendo CodSap cuando la orden es SAP
 			Map<String, Object> body = new LinkedHashMap<>();
 			body.put("Password", orden.getActivacionPassword());
-			if (orden instanceof com.iw3.tpfinal.grupoTeyo.integration.sap.model.OrdenSap sap) {
+			if (orden instanceof com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSap sap) {
 				body.put("CodSap", sap.getCodSap());
 			}
 

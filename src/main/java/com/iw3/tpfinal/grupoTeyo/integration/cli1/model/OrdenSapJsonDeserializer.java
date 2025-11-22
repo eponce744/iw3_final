@@ -1,4 +1,4 @@
-package com.iw3.tpfinal.grupoTeyo.integration.sap.model;
+package com.iw3.tpfinal.grupoTeyo.integration.cli1.model;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -7,6 +7,10 @@ import java.util.Date;
 import org.apache.coyote.BadRequestException;
 
 import com.iw3.tpfinal.grupoTeyo.model.Cliente;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.CamionSap;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.ChoferSap;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.ClienteSap;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.ProductoSap;
 import com.iw3.tpfinal.grupoTeyo.model.Camion;
 import com.iw3.tpfinal.grupoTeyo.model.Chofer;
 import com.iw3.tpfinal.grupoTeyo.model.Producto;
@@ -25,10 +29,6 @@ import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IChoferBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IClienteBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IProductoBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.JsonUtiles;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.ClienteSap;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.CamionSap;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.ChoferSap;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.ProductoSap;
 
 public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 

@@ -1,9 +1,9 @@
 package com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.implementations;
 
 import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSap;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.persistence.OrdenSapRepository;
 import com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.interfaces.IOrdenCli3Business;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.OrdenSap;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.persistence.OrdenSapRepository;
 import com.iw3.tpfinal.grupoTeyo.model.Detalle;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.*;

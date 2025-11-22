@@ -1,4 +1,4 @@
-package com.iw3.tpfinal.grupoTeyo.integration.sap.controllers;
+package com.iw3.tpfinal.grupoTeyo.integration.cli1.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iw3.tpfinal.grupoTeyo.controllers.BaseRestController;
 import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.OrdenSap;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.business.interfaces.IOrdenSapBusiness;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSap;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.business.interfaces.IOrdenSapBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;

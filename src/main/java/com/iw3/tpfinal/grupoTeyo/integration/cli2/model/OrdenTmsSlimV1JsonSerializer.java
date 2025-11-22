@@ -1,4 +1,4 @@
-package com.iw3.tpfinal.grupoTeyo.integration.tms.model;
+package com.iw3.tpfinal.grupoTeyo.integration.cli2.model;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

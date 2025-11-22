@@ -1,4 +1,4 @@
-package com.iw3.tpfinal.grupoTeyo.integration.tms.model.business.interfaces;
+package com.iw3.tpfinal.grupoTeyo.integration.cli2.model.business.interfaces;
 
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;

@@ -28,7 +28,7 @@ import com.iw3.tpfinal.grupoTeyo.auth.filters.AuthConstants;
 import com.iw3.tpfinal.grupoTeyo.controllers.BaseRestController;
 import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
 import com.iw3.tpfinal.grupoTeyo.util.IStandartResponseBusiness;
-//import ar.edu.iw3.auth.event.UserEvent;
+//import com.iw3.tpfinal.grupoTeyo.auth.event.UserEvent;
 import jakarta.servlet.http.HttpServletRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,6 +64,9 @@ public class AuthRestController extends BaseRestController {
             HttpServletRequest request) {
         Authentication auth = null;
         try {
+        	//Metodo authenticate de authManager requiere un objeto de tipo Authentication:
+        	//auth = authManager.authenticate(Authentication authentication)
+        	//Para generar ese objeto tipo Authentication, casteamos a CustomAuthenticationManager.authWrapp(username,password)
             auth = authManager.authenticate(((CustomAuthenticationManager) authManager).authWrap(username, password));
         } catch (AuthenticationServiceException e0) {
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e0, e0.getMessage()),

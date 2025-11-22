@@ -1,11 +1,11 @@
-package com.iw3.tpfinal.grupoTeyo.integration.sap.model.business.interfaces;
+package com.iw3.tpfinal.grupoTeyo.integration.cli1.model.business.interfaces;
 
 import java.util.List;
 
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSap;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
-import com.iw3.tpfinal.grupoTeyo.integration.sap.model.OrdenSap;
 
 public interface IOrdenSapBusiness {
 	public OrdenSap load(String codSap) throws NotFoundException, BusinessException;
