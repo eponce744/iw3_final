@@ -7,10 +7,10 @@ import java.util.Date;
 import org.apache.coyote.BadRequestException;
 
 import com.iw3.tpfinal.grupoTeyo.model.Cliente;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.CamionSap;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.ChoferSap;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.ClienteSap;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.ProductoSap;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.CamionCli1;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.ChoferCli1;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.ClienteCli1;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.ProductoCli1;
 import com.iw3.tpfinal.grupoTeyo.model.Camion;
 import com.iw3.tpfinal.grupoTeyo.model.Chofer;
 import com.iw3.tpfinal.grupoTeyo.model.Producto;
@@ -30,13 +30,13 @@ import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IClienteBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IProductoBusiness;
 import com.iw3.tpfinal.grupoTeyo.util.JsonUtiles;
 
-public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
+public class OrdenCli1JsonDeserializer extends StdDeserializer<OrdenCli1> {
 
 	//----------------Constructores---------------
 	//Reciben el tipo de clase y la instancia de la interfaz usada en la deserialización.
 	//Deserealizacion: JSON a clase Java
 
-	protected OrdenSapJsonDeserializer(Class<?> vc) {
+	protected OrdenCli1JsonDeserializer(Class<?> vc) {
 		super(vc);
 	}
 	
@@ -45,7 +45,7 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 	private IChoferBusiness choferBusiness;
 	private IProductoBusiness productoBusiness;
 	
-	public OrdenSapJsonDeserializer(
+	public OrdenCli1JsonDeserializer(
 			Class<?> vc, 
 			IClienteBusiness clienteBusiness, 
 			ICamionBusiness camionBusiness, 
@@ -63,8 +63,8 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 	
 	//El resultado de esto es la instanciacion de una clase Java a partir del Json recibido
 	@Override
-	public OrdenSap deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
-		OrdenSap r = new OrdenSap();
+	public OrdenCli1 deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
+		OrdenCli1 r = new OrdenCli1();
 		Date currentTime = new Date(System.currentTimeMillis());
 		//Valores iniciales de la orden
 		r.setUltimaMasaAcumulada(0.0);
@@ -124,7 +124,7 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 			String codClienteSap = JsonUtiles.getString(clienteNode, "codigo_cliente,client_code,customer_code".split(","), "");
 			if (codClienteSap == null || codClienteSap.isEmpty()) throw new BadRequestException("Codigo de Cliente no puede ser nulo o vacio");
 			String contacto = JsonUtiles.getString(clienteNode, "contacto,contact".split(","), "");
-			ClienteSap nuevo = new ClienteSap();
+			ClienteCli1 nuevo = new ClienteCli1();
 			nuevo.setRazonSocial(razonSocial);
 			nuevo.setCodClienteSap(codClienteSap);
 			nuevo.setContacto(contacto);
@@ -159,7 +159,7 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 			if (codCamionSap == null || codCamionSap.isEmpty()) throw new BadRequestException("Codigo de Camion no puede ser nulo o vacio");
 			String descripcion = JsonUtiles.getString(camionNode, "descripcion,description".split(","), null);
 			int[] cisternado = JsonUtiles.getInt(camionNode, "cisternado,cisterns".split(","), 0);
-			CamionSap nuevo = new CamionSap();
+			CamionCli1 nuevo = new CamionCli1();
 			nuevo.setPatente(patente);
 			nuevo.setCodCamionSap(codCamionSap);
 			nuevo.setDescripcion(descripcion);
@@ -194,7 +194,7 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 			if (codChoferSap == null || codChoferSap.isEmpty()) throw new BadRequestException("Codigo de Chofer no puede ser nulo o vacio");
 			String nombre = JsonUtiles.getString(choferNode, "nombre,name".split(","), "");
 			String apellido = JsonUtiles.getString(choferNode, "apellido,surname".split(","), "");
-			ChoferSap nuevo = new ChoferSap();
+			ChoferCli1 nuevo = new ChoferCli1();
 			nuevo.setDocumento(documento);
 			nuevo.setCodChoferSap(codChoferSap);
 			nuevo.setNombre(nombre);
@@ -228,7 +228,7 @@ public class OrdenSapJsonDeserializer extends StdDeserializer<OrdenSap> {
 			String codProductoSap = JsonUtiles.getString(productoNode, "codigo_producto,product_code".split(","), "");
 			if (codProductoSap == null || codProductoSap.isEmpty()) throw new BadRequestException("Codigo de Producto no puede ser nulo o vacio");
 			String descripcionProducto = JsonUtiles.getString(productoNode, "descripcion,description".split(","), null);
-			ProductoSap nuevo = new ProductoSap();
+			ProductoCli1 nuevo = new ProductoCli1();
 			nuevo.setNombre(nombreProducto);
 			nuevo.setCodProductoSap(codProductoSap);
 			nuevo.setDescripcion(descripcionProducto);

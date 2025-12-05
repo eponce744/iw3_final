@@ -18,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ChoferSap extends Chofer{
+public class ChoferCli1 extends Chofer{
 
 	@Column(nullable=false, unique=true)
 	private String codChoferSap;

@@ -10,11 +10,11 @@ import java.io.IOException;
 
 
 
-public class OrdenTmsSlimV1JsonSerializer  extends StdSerializer<Orden> {
+public class OrdenCli2SlimV1JsonSerializer  extends StdSerializer<Orden> {
 
     private final IDetalleBusiness detalleBusiness;
 
-    public OrdenTmsSlimV1JsonSerializer(Class<?> t, boolean dummy, IDetalleBusiness detalleBusiness) {
+    public OrdenCli2SlimV1JsonSerializer(Class<?> t, boolean dummy, IDetalleBusiness detalleBusiness) {
         super(t, dummy);
         this.detalleBusiness = detalleBusiness;
     }

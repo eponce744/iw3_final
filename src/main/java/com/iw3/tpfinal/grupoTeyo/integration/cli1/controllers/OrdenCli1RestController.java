@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iw3.tpfinal.grupoTeyo.controllers.BaseRestController;
 import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSap;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.business.interfaces.IOrdenSapBusiness;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenCli1;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.business.interfaces.IOrdenCli1Business;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
-@RequestMapping(Constants.URL_INTEGRATION_SAP + "/ordenes")
+@RequestMapping(Constants.URL_INTEGRATION_CLI1 + "/ordenes")
 @Tag(
     name = "Integración SAP - Órdenes",
     description = "Endpoints para recibir y consultar órdenes provenientes de SAP. " +
@@ -39,10 +39,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
                   "se reciben por su código externo (string) y no como objetos embebidos. " +
                   "La capa de negocio se encarga de resolver esos códigos y sincronizar entidades."
 )
-public class OrdenSapRestController extends BaseRestController {
+public class OrdenCli1RestController extends BaseRestController {
 
     @Autowired
-    private IOrdenSapBusiness ordenBusiness;
+    private IOrdenCli1Business ordenBusiness;
 
     @Autowired
     private IStandartResponseBusiness response;
@@ -106,11 +106,11 @@ public class OrdenSapRestController extends BaseRestController {
     @PostMapping(value = "")
     public ResponseEntity<?> add(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Objeto OrdenSap (ver ejemplo en la descripción)", required = true)
-            @RequestBody OrdenSap product) {
+            @RequestBody OrdenCli1 product) {
         try {
-            OrdenSap response = ordenBusiness.add(product);
+            OrdenCli1 response = ordenBusiness.add(product);
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("location", Constants.URL_INTEGRATION_SAP + "/ordenes/" + response.getCodSap());
+            responseHeaders.set("location", Constants.URL_INTEGRATION_CLI1 + "/ordenes/" + response.getCodSap());
             return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
         } catch (BusinessException e) {
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
@@ -137,9 +137,9 @@ public class OrdenSapRestController extends BaseRestController {
     @PostMapping(value = "/b2b")
     public ResponseEntity<?> addExternal(HttpEntity<String> httpEntity) {
         try {
-            OrdenSap response = ordenBusiness.addExternal(httpEntity.getBody());
+            OrdenCli1 response = ordenBusiness.addExternal(httpEntity.getBody());
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("location", Constants.URL_INTEGRATION_SAP + "/ordenes/" + response.getCodSap());
+            responseHeaders.set("location", Constants.URL_INTEGRATION_CLI1 + "/ordenes/" + response.getCodSap());
             return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
         } catch (BusinessException e) {
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),

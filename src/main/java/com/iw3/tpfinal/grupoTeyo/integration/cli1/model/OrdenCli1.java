@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class OrdenSap extends Orden{
+public class OrdenCli1 extends Orden{
 	
 	@Column(nullable=false, unique=true)
 	private String codSap;

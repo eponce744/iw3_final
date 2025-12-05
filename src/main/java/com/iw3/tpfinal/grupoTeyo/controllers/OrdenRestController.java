@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.OrdenTmsSlimV1JsonSerializer;
+import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.OrdenCli2SlimV1JsonSerializer;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BadRequestException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
@@ -174,7 +174,7 @@ public class OrdenRestController {
             @PathVariable long idOrden) {
         try{
             Orden orden = ordenBusiness.conciliacion(idOrden);
-            StdSerializer<Orden> ser = new OrdenTmsSlimV1JsonSerializer(Orden.class, false, detalleBusiness);
+            StdSerializer<Orden> ser = new OrdenCli2SlimV1JsonSerializer(Orden.class, false, detalleBusiness);
             String result = JsonUtiles.getObjectMapper(Orden.class, ser, null).writeValueAsString(orden);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (NotFoundException e) {

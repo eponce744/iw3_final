@@ -1,8 +1,8 @@
 package com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.implementations;
 
 import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSap;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.persistence.OrdenSapRepository;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenCli1;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.persistence.OrdenCli1Repository;
 import com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.interfaces.IOrdenCli3Business;
 import com.iw3.tpfinal.grupoTeyo.model.Detalle;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
@@ -26,7 +26,7 @@ import java.util.Optional;
 public class OrdenCli3Business implements IOrdenCli3Business {
 
 	@Autowired
-    private OrdenSapRepository ordenSapDAO;
+    private OrdenCli1Repository ordenSapDAO;
 	
 	@Autowired
 	private OrdenRepository ordenDAO;
@@ -45,12 +45,12 @@ public class OrdenCli3Business implements IOrdenCli3Business {
     public Orden validacionPassword(String codOrdenSap, int password)
             throws NotFoundException, BusinessException, InvalidityException {
 
-        Optional<OrdenSap> ordenSap = ordenSapDAO.findOneByCodSap(codOrdenSap);
-        if (ordenSap.isEmpty()) {
+        Optional<OrdenCli1> ordenCli1 = ordenSapDAO.findOneByCodSap(codOrdenSap);
+        if (ordenCli1.isEmpty()) {
             throw new NotFoundException("No se encontro la orden con codigo " + codOrdenSap);
         }
 
-        Orden orden = ordenBusiness.load(ordenSap.get().getId());
+        Orden orden = ordenBusiness.load(ordenCli1.get().getId());
 
         if (orden.getEstado() != Orden.Estado.PESAJE_INICIAL_REGISTRADO) {
             throw new InvalidityException("Estado de orden no válido");

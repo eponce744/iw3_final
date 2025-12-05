@@ -2,7 +2,7 @@ package com.iw3.tpfinal.grupoTeyo.integration.cli2.controllers;
 
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
-import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.OrdenTmsSlimV1JsonSerializer;
+import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.OrdenCli2SlimV1JsonSerializer;
 import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.business.interfaces.IOrdenCli2Business;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.InvalidityException;
@@ -36,7 +36,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
-@RequestMapping(Constants.URL_INTEGRATION_TMS + "/ordenes")
+@RequestMapping(Constants.URL_INTEGRATION_CLI2 + "/ordenes")
 @Tag(name = "Integración TMS - Balanza", description = "Endpoints que utiliza el sistema de balanza/TMS para el flujo de pesaje y cierre de órdenes. "
 		+ "Flujo soportado:\n"
 		+ "1) pesaje-inicial: registra la tara (peso vacío) asociada a una patente; la orden debe estar en estado "
@@ -82,7 +82,7 @@ public class OrdenCli2RestController {
 			// Armamos un cuerpo JSON estable, incluyendo CodSap cuando la orden es SAP
 			Map<String, Object> body = new LinkedHashMap<>();
 			body.put("Password", orden.getActivacionPassword());
-			if (orden instanceof com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSap sap) {
+			if (orden instanceof com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenCli1 sap) {
 				body.put("CodSap", sap.getCodSap());
 			}
 
@@ -117,7 +117,7 @@ public class OrdenCli2RestController {
 			@Parameter(in = ParameterIn.HEADER, name = "Peso-Final", description = "Peso final en kilogramos (double)", required = true, schema = @Schema(type = "number", format = "double")) @RequestHeader("Peso-Final") Double pesoFinal) {
 		try {
 			Orden orden = ordenCli2Business.registrarPesajeFinal(patente, pesoFinal);
-			StdSerializer<Orden> ser = new OrdenTmsSlimV1JsonSerializer(Orden.class, false, detalleBusiness);
+			StdSerializer<Orden> ser = new OrdenCli2SlimV1JsonSerializer(Orden.class, false, detalleBusiness);
 			String result = JsonUtiles.getObjectMapper(Orden.class, ser, null).writeValueAsString(orden);
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (NotFoundException e) {

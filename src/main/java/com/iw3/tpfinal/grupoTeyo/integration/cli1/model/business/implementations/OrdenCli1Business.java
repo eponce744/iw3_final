@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSap;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenSapJsonDeserializer;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.business.interfaces.IOrdenSapBusiness;
-import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.persistence.OrdenSapRepository;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenCli1;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenCli1JsonDeserializer;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.business.interfaces.IOrdenCli1Business;
+import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.persistence.OrdenCli1Repository;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 
@@ -26,14 +26,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class OrdenSapBusiness implements IOrdenSapBusiness {
+public class OrdenCli1Business implements IOrdenCli1Business {
 
     @Autowired(required = false)
-    private OrdenSapRepository ordenDAO;
+    private OrdenCli1Repository ordenDAO;
 
     @Override
-    public OrdenSap load(String codSap) throws NotFoundException, BusinessException {
-            Optional<OrdenSap> r;
+    public OrdenCli1 load(String codSap) throws NotFoundException, BusinessException {
+            Optional<OrdenCli1> r;
             try {
                     r = ordenDAO.findOneByCodSap(codSap);
             } catch (Exception e) {
@@ -47,7 +47,7 @@ public class OrdenSapBusiness implements IOrdenSapBusiness {
     }
 
     @Override
-    public List<OrdenSap> list() throws BusinessException {
+    public List<OrdenCli1> list() throws BusinessException {
             try {
                     return ordenDAO.findAll();
             } catch (Exception e) {
@@ -60,7 +60,7 @@ public class OrdenSapBusiness implements IOrdenSapBusiness {
     private IOrdenBusiness ordenBaseBusiness;
 
     @Override
-    public OrdenSap add(OrdenSap orden) throws FoundException, BusinessException {
+    public OrdenCli1 add(OrdenCli1 orden) throws FoundException, BusinessException {
 
             try {
                     ordenBaseBusiness.load(orden.getId());
@@ -95,17 +95,17 @@ public class OrdenSapBusiness implements IOrdenSapBusiness {
 	
 	
     @Override
-    public OrdenSap addExternal(String json) throws FoundException, BusinessException {
-            ObjectMapper mapper = JsonUtiles.getObjectMapper(OrdenSap.class,
-                            new OrdenSapJsonDeserializer(
-                            		OrdenSap.class, 
+    public OrdenCli1 addExternal(String json) throws FoundException, BusinessException {
+            ObjectMapper mapper = JsonUtiles.getObjectMapper(OrdenCli1.class,
+                            new OrdenCli1JsonDeserializer(
+                            		OrdenCli1.class, 
                             		clienteBusiness, 
                             		camionBusiness, 
                             		choferBusiness, 
                             		productoBusiness),null);
-            OrdenSap orden = null;
+            OrdenCli1 orden = null;
             try {
-                    orden = mapper.readValue(json, OrdenSap.class);
+                    orden = mapper.readValue(json, OrdenCli1.class);
             } catch (JsonProcessingException e) {
                     log.error(e.getMessage(), e);
                     throw BusinessException.builder().ex(e).build();
