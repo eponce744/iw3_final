@@ -1,5 +1,8 @@
 package com.iw3.tpfinal.grupoTeyo.integration.cli1.controllers;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -140,7 +143,15 @@ public class OrdenCli1RestController extends BaseRestController {
             OrdenCli1 response = ordenBusiness.addExternal(httpEntity.getBody());
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("location", Constants.URL_INTEGRATION_CLI1 + "/ordenes/" + response.getCodSap());
-            return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
+            
+			// Armamos un cuerpo JSON con la patente del camion de la orden cargada
+			Map<String, Object> body = new LinkedHashMap<>();
+			body.put("patente", response.getCamion().getPatente());
+            
+            //return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
+
+            return ResponseEntity.status(HttpStatus.CREATED).headers(responseHeaders).body(body);
+            
         } catch (BusinessException e) {
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
