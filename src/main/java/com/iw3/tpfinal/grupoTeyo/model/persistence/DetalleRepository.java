@@ -23,5 +23,11 @@ public interface DetalleRepository extends JpaRepository<Detalle, Long>{
 
     @Query("SELECT AVG(d.caudal) FROM Detalle d WHERE d.orden.id = :ordenId")
     Double findAverageCaudalByOrdenId(long ordenId);
+    /**
+     * Devuelve la fecha del último detalle guardado (MAX de fechaUltimoDato) para la orden indicada.
+     * Equivalente JPQL a: SELECT MAX(d.fecha_ultimo_dato) FROM detalle d WHERE d.id_orden = :ordenId
+     */
+    @Query("SELECT MAX(d.fechaUltimoDato) FROM Detalle d WHERE d.orden.id = :ordenId")
+    java.util.Date findMaxFechaUltimoDatoByOrdenId(long ordenId);
 
 }

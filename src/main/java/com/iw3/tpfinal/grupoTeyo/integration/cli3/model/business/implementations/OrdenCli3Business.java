@@ -9,6 +9,7 @@ import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.*;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IDetalleBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
+import com.iw3.tpfinal.grupoTeyo.model.persistence.DetalleRepository;
 import com.iw3.tpfinal.grupoTeyo.model.persistence.OrdenRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,9 @@ public class OrdenCli3Business implements IOrdenCli3Business {
 	
 	@Autowired
 	private OrdenRepository ordenDAO;
+
+    @Autowired
+    private DetalleRepository detalleDAO;
 
     @Autowired
     private IOrdenBusiness ordenBusiness;
@@ -98,8 +102,14 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         ordenBusiness.update(ordenEncontrada);
         
         detalle.setFechaUltimoDato(currentTime);
+        
         try{
+            // Trae la fecha del ultimo dato ingresado para la orden
+            Date fechaUltimoDato = detalleDAO.findMaxFechaUltimoDatoByOrdenId(ordenEncontrada.getId());
+            // Si es null o si la diferencia entre la fecha del ultimo dato y la del nuevo detalle es mayor o igual a 5 segundos, se agrega el detalle
+            if(fechaUltimoDato == null || detalle.getFechaUltimoDato().getTime() - fechaUltimoDato.getTime() >= 5000){
         	detalleBusiness.add(detalle);
+            }
         }catch (BusinessException e){
         } catch (FoundException e) {
         }
