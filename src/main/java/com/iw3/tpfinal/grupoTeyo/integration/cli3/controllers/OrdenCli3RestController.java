@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -47,6 +48,9 @@ public class OrdenCli3RestController extends BaseRestController {
 
 	@Autowired
 	private IStandartResponseBusiness response;
+	
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
 
 	@SneakyThrows
 	@Operation(summary = "Validar contraseña de activación", description = "Valida la contraseña de activación (5 dígitos) para la orden identificada por su código externo (CodOrdenSap). Si es válida devuelve la orden con los datos necesarios para iniciar la carga (incluye preset cuando corresponda).")
@@ -85,6 +89,8 @@ public class OrdenCli3RestController extends BaseRestController {
 			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Registro de detalle con masaAcumulada, densidad, temperatura y caudal.", required = true) @RequestBody Detalle detalle) {
 		try {
 			Orden orden = ordenCli3Business.recepcionDetalles(detalle);
+			messagingTemplate.convertAndSend("/topic/mass", detalle);
+			
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("Order-Id", String.valueOf(orden.getId()));
 			return new ResponseEntity<>(responseHeaders, HttpStatus.OK);

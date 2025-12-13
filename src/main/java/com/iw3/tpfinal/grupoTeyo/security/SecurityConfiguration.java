@@ -64,6 +64,7 @@ public class SecurityConfiguration {
 				.requestMatchers("/swagger-ui.html").permitAll()
 				.requestMatchers("/swagger-ui/**").permitAll()
 				
+				.requestMatchers("/ws/**").permitAll()
 				.requestMatchers("/ui/**").permitAll()
 				.requestMatchers("/ui/js/**").permitAll()
 				.requestMatchers("/favicon.ico").permitAll()
