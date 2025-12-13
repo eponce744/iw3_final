@@ -33,15 +33,16 @@ public class SecurityConfiguration {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Bean
-	WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedMethods("*").allowedHeaders("*").allowedOrigins("*");
-			}
-		};
-	}
+	// @Bean
+	// WebMvcConfigurer corsConfigurer() {
+	// 	return new WebMvcConfigurer() {
+	// 		@Override
+	// 		public void addCorsMappings(CorsRegistry registry) {
+	// 			registry.addMapping("/**").allowedMethods("*").allowedHeaders("*").allowedOrigins("*");
+	// 		}
+	// 	};
+	// }
+
 	@Autowired
 	private IUserBusiness userBusiness;
 	@Bean
