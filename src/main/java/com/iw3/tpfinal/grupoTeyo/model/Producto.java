@@ -34,6 +34,10 @@ public class Producto {
     // Descripción opcional
     @Column(nullable = true, length = 1000)
     private String descripcion;
+    
+    //Valor umbral de temperatura
+    @Column(nullable = false)
+    private Double umbralTemperatura;
 
 }
 

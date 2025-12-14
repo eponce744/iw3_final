@@ -63,7 +63,7 @@ public class OrdenCli1JsonDeserializer extends StdDeserializer<OrdenCli1> {
 	
 	//El resultado de esto es la instanciacion de una clase Java a partir del Json recibido
 	@Override
-	public OrdenCli1 deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
+	public OrdenCli1 deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException{
 		OrdenCli1 r = new OrdenCli1();
 		Date currentTime = new Date(System.currentTimeMillis());
 		//Valores iniciales de la orden
@@ -225,13 +225,20 @@ public class OrdenCli1JsonDeserializer extends StdDeserializer<OrdenCli1> {
 		} else {
 			String nombreProducto = JsonUtiles.getString(productoNode, "nombre,name".split(","), "");
 			if (nombreProducto == null || nombreProducto.isEmpty()) throw new BadRequestException("Nombre de Producto no puede ser nulo o vacio");
+			
 			String codProductoSap = JsonUtiles.getString(productoNode, "codigo_producto,product_code".split(","), "");
 			if (codProductoSap == null || codProductoSap.isEmpty()) throw new BadRequestException("Codigo de Producto no puede ser nulo o vacio");
+			
+			double umbralTemperatura = JsonUtiles.getDouble(productoNode, "umbralTemperatura,umbral".split(","), 9000000);
+			if ( umbralTemperatura == 9000000) throw new BadRequestException("Umbral de Temperatura de Producto no puede estar vacio");
+			
 			String descripcionProducto = JsonUtiles.getString(productoNode, "descripcion,description".split(","), null);
+			
 			ProductoCli1 nuevo = new ProductoCli1();
 			nuevo.setNombre(nombreProducto);
 			nuevo.setCodProductoSap(codProductoSap);
 			nuevo.setDescripcion(descripcionProducto);
+			nuevo.setUmbralTemperatura(umbralTemperatura);
 			try {
 				r.setProducto(productoBusiness.add(nuevo));
 			} catch (com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException fe) {
