@@ -101,4 +101,8 @@ public class Orden {
 	@JsonManagedReference //"Lado padre"-Para evitar referencia circular al serializar a JSON (Es decir infinito anidamiento)
 	@OneToMany(mappedBy = "orden") // Relación uno a muchos con Detalle (es decir una orden tiene muchos detalles)
 	private Set<Detalle> detalles;
+
+	@JsonManagedReference //"Lado padre"-Para evitar referencia circular al serializar a JSON (Es decir infinito anidamiento)
+	@OneToMany(mappedBy = "orden") // Relación uno a muchos con Alarma
+	private Set<Alarma> alarmas;
 }

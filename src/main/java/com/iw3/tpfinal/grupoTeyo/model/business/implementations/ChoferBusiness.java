@@ -92,6 +92,7 @@ public class ChoferBusiness implements IChoferBusiness{
         load(chofer.getId()); // Verifico que el chofer exista, si no lanza NotFoundException
         Optional<Chofer> choferEncontrado=null;
         try {
+            // Busco otro chofer con el mismo documento pero distinto ID
             choferEncontrado = choferDAO.findByDocumentoAndIdNot(chofer.getDocumento(), chofer.getId());
         } catch (Exception e) {
             log.error(e.getMessage(), e);

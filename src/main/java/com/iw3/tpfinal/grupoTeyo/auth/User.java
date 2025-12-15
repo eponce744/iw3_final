@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.iw3.tpfinal.grupoTeyo.model.Alarma;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
@@ -82,7 +85,8 @@ public class User implements UserDetails {
 					@JoinColumn(name = "idRole", referencedColumnName = "id") })
 	private Set<Role> roles;
 
-	
+	@OneToMany(mappedBy = "usuario")
+	private Set<Alarma> alarmas;
 	
 	@Transient
 	public boolean isInRole(Role role) {

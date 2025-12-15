@@ -23,6 +23,10 @@ public class MailRestController extends BaseRestController {
     @Autowired
     private EmailBusiness emailBusiness;
 
+
+
+    // BORRAR DESPUES DE PRUEBAS
+
     @PostMapping("/test")
     public ResponseEntity<?> test(@RequestParam String to, @RequestParam String subject){
         try {

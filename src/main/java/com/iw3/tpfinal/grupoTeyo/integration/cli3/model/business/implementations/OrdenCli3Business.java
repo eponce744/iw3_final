@@ -4,11 +4,15 @@ import com.iw3.tpfinal.grupoTeyo.controllers.Constants;
 import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.OrdenCli1;
 import com.iw3.tpfinal.grupoTeyo.integration.cli1.model.persistence.OrdenCli1Repository;
 import com.iw3.tpfinal.grupoTeyo.integration.cli3.model.business.interfaces.IOrdenCli3Business;
+import com.iw3.tpfinal.grupoTeyo.model.Alarma;
 import com.iw3.tpfinal.grupoTeyo.model.Detalle;
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
+import com.iw3.tpfinal.grupoTeyo.model.Alarma.Estado;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.*;
+import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IAlarmaBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IDetalleBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
+import com.iw3.tpfinal.grupoTeyo.model.persistence.AlarmaRepository;
 import com.iw3.tpfinal.grupoTeyo.model.persistence.DetalleRepository;
 import com.iw3.tpfinal.grupoTeyo.model.persistence.OrdenRepository;
 
@@ -21,6 +25,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
+import java.util.Comparator;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -34,6 +41,9 @@ public class OrdenCli3Business implements IOrdenCli3Business {
 
     @Autowired
     private DetalleRepository detalleDAO;
+
+    @Autowired
+    private IAlarmaBusiness alarmaBusiness;
 
     @Autowired
     private IOrdenBusiness ordenBusiness;
@@ -103,12 +113,37 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         
         detalle.setFechaUltimoDato(currentTime);
         
+        // Obtener la última alarma de la orden (por fecha, fallback por id) de forma segura
+        Alarma ultimaAlarma = null;
+        Set<Alarma> alarmas = ordenEncontrada.getAlarmas();
+        if (alarmas != null && !alarmas.isEmpty()) {
+            Comparator<Alarma> byFecha = Comparator.comparing(Alarma::getFecha, Comparator.nullsLast(Comparator.naturalOrder()));
+            Comparator<Alarma> byId = Comparator.comparingLong(Alarma::getId);
+            ultimaAlarma = alarmas.stream().filter(Objects::nonNull).max(byFecha.thenComparing(byId)).orElse(null);
+        }
+
+        // Si no hay alarma pendiente, evaluamos crear una nueva
+        if (ultimaAlarma == null || ultimaAlarma.getEstado() != Estado.PENDIENTE) {
+            if (detalle.getTemperatura() > ordenEncontrada.getProducto().getUmbralTemperatura()) {
+                try{
+                    Alarma alarmaTemp = new Alarma();
+                    alarmaTemp.setEstado(Estado.PENDIENTE);
+                    alarmaTemp.setFecha(currentTime);
+                    alarmaTemp.setTemperaturaRegistrada(detalle.getTemperatura());
+                    alarmaTemp.setOrden(ordenEncontrada);
+                    alarmaBusiness.add(alarmaTemp);
+                }catch (FoundException e){
+                } catch (BusinessException e) {
+                }
+            }
+        }
+
         try{
             // Trae la fecha del ultimo dato ingresado para la orden
             Date fechaUltimoDato = detalleDAO.findMaxFechaUltimoDatoByOrdenId(ordenEncontrada.getId());
             // Si es null o si la diferencia entre la fecha del ultimo dato y la del nuevo detalle es mayor o igual a 5 segundos, se agrega el detalle
             if(fechaUltimoDato == null || detalle.getFechaUltimoDato().getTime() - fechaUltimoDato.getTime() >= 5000){
-        	detalleBusiness.add(detalle);
+        	    detalleBusiness.add(detalle);
             }
         }catch (BusinessException e){
         } catch (FoundException e) {
