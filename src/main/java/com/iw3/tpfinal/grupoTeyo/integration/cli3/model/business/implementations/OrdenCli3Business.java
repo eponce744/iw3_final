@@ -122,6 +122,8 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         Alarma ultimaAlarma = null;
         Set<Alarma> alarmas = ordenEncontrada.getAlarmas();
         if (alarmas != null && !alarmas.isEmpty()) {
+        	//Traemos una alarma segun algun criterio (mas reciente o por id)
+        	//Entenderlo
             Comparator<Alarma> byFecha = Comparator.comparing(Alarma::getFecha, Comparator.nullsLast(Comparator.naturalOrder()));
             Comparator<Alarma> byId = Comparator.comparingLong(Alarma::getId);
             ultimaAlarma = alarmas.stream().filter(Objects::nonNull).max(byFecha.thenComparing(byId)).orElse(null);

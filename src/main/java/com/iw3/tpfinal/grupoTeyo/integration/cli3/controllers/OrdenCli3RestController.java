@@ -89,7 +89,7 @@ public class OrdenCli3RestController extends BaseRestController {
 			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Registro de detalle con masaAcumulada, densidad, temperatura y caudal.", required = true) @RequestBody Detalle detalle) {
 		try {
 			Orden orden = ordenCli3Business.recepcionDetalles(detalle);
-			messagingTemplate.convertAndSend("/topic/mass", detalle);
+			messagingTemplate.convertAndSend("/topic/masa", detalle);
 			
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("Order-Id", String.valueOf(orden.getId()));
