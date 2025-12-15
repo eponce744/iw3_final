@@ -12,12 +12,14 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.*;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IAlarmaBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IDetalleBusiness;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IOrdenBusiness;
+import com.iw3.tpfinal.grupoTeyo.model.event.EventoAlarma;
 import com.iw3.tpfinal.grupoTeyo.model.persistence.AlarmaRepository;
 import com.iw3.tpfinal.grupoTeyo.model.persistence.DetalleRepository;
 import com.iw3.tpfinal.grupoTeyo.model.persistence.OrdenRepository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,9 @@ public class OrdenCli3Business implements IOrdenCli3Business {
     
     @Autowired
     private IDetalleBusiness detalleBusiness;
+    
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     /*
      * Validamos la orden, enviando el codigoExterno y la password. 
@@ -132,6 +137,8 @@ public class OrdenCli3Business implements IOrdenCli3Business {
                     alarmaTemp.setTemperaturaRegistrada(detalle.getTemperatura());
                     alarmaTemp.setOrden(ordenEncontrada);
                     alarmaBusiness.add(alarmaTemp);
+                    applicationEventPublisher.publishEvent(new EventoAlarma(alarmaTemp));
+                    //Probar si esto tira la alarma
                 }catch (FoundException e){
                 } catch (BusinessException e) {
                 }
