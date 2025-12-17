@@ -9,7 +9,15 @@ import lombok.Setter;
 @Setter
 public class EventoAlarma extends ApplicationEvent{
 	
-	public EventoAlarma(Object source) {
-		super(source);
+
+	public enum TipoEvento{
+		TEMPERATURA_EXCEDIDA
 	}
+
+	public EventoAlarma(Object source, TipoEvento tipoEvento) {
+		super(source);
+		this.tipoEvento = tipoEvento;
+	}
+
+	private TipoEvento tipoEvento;
 }

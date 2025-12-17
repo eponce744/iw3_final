@@ -132,18 +132,7 @@ public class OrdenCli3Business implements IOrdenCli3Business {
         // Si no hay alarma pendiente, evaluamos crear una nueva
         if (ultimaAlarma == null || ultimaAlarma.getEstado() != Estado.PENDIENTE) {
             if (detalle.getTemperatura() > ordenEncontrada.getProducto().getUmbralTemperatura()) {
-                try{
-                    Alarma alarmaTemp = new Alarma();
-                    alarmaTemp.setEstado(Estado.PENDIENTE);
-                    alarmaTemp.setFecha(currentTime);
-                    alarmaTemp.setTemperaturaRegistrada(detalle.getTemperatura());
-                    alarmaTemp.setOrden(ordenEncontrada);
-                    alarmaBusiness.add(alarmaTemp);
-                    applicationEventPublisher.publishEvent(new EventoAlarma(alarmaTemp));
-                    //Probar si esto tira la alarma
-                }catch (FoundException e){
-                } catch (BusinessException e) {
-                }
+                applicationEventPublisher.publishEvent(new EventoAlarma(detalle, EventoAlarma.TipoEvento.TEMPERATURA_EXCEDIDA));
             }
         }
 
