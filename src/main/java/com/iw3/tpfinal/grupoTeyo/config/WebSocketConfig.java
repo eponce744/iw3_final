@@ -15,7 +15,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 		
 		//Endpoint para conectarse al WebSocket ()
 		registry.addEndpoint("/ws")
-				.setAllowedOrigins("http://localhost:5500")  // <--- Aqui habilitamos el origen de las solicitudes hacia el Backend
 				.withSockJS();	
 	}
 	

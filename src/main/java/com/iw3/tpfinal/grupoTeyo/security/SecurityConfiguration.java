@@ -30,15 +30,20 @@ public class SecurityConfiguration {
 		return new BCryptPasswordEncoder();
 	}
 
-	// @Bean
-	// WebMvcConfigurer corsConfigurer() {
-	// 	return new WebMvcConfigurer() {
-	// 		@Override
-	// 		public void addCorsMappings(CorsRegistry registry) {
-	// 			registry.addMapping("/**").allowedMethods("*").allowedHeaders("*").allowedOrigins("*");
-	// 		}
-	// 	};
-	// }
+	// HABILITAR CORS
+    @Bean
+    WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                    .allowedOrigins("http://localhost:5173") // Puerto de Vite
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true);
+            }
+        };
+    }
 
 	@Autowired
 	private IUserAuthBusiness userBusiness;
@@ -53,6 +58,8 @@ public class SecurityConfiguration {
 		// CSRF: https://developer.mozilla.org/es/docs/Glossary/CSRF
 		
 		http.csrf(AbstractHttpConfigurer::disable);
+		http.cors(Customizer.withDefaults());
+
 		http.authorizeHttpRequests(auth -> auth
 				
 				.requestMatchers(HttpMethod.POST, Constants.URL_LOGIN).permitAll()
