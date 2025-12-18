@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +55,7 @@ public class OrdenRestController {
         @ApiResponse(responseCode = "200", description = "Lista devuelta OK"),
         @ApiResponse(responseCode = "500", description = "Error interno")
     })
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPERADOR')")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> list(){
         try {
@@ -70,6 +72,7 @@ public class OrdenRestController {
         @ApiResponse(responseCode = "404", description = "No encontrada"),
         @ApiResponse(responseCode = "500", description = "Error interno")
     })
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPERADOR')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> loadOrden(
         @Parameter(in = ParameterIn.PATH, name = "id", schema = @Schema(type = "integer"), required = true, description = "Identificador de la orden.")
@@ -169,6 +172,7 @@ public class OrdenRestController {
         @ApiResponse(responseCode = "404", description = "Orden no encontrada"),
         @ApiResponse(responseCode = "500", description = "Error interno")
     })
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPERADOR') or hasRole('ROLE_CLI1') or hasRole('ROLE_CLI2') or hasRole('ROLE_CLI3')")
     @GetMapping(value = "/conciliacion/{idOrden}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> conciliacion(
             @PathVariable long idOrden) {

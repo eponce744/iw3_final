@@ -15,8 +15,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.iw3.tpfinal.grupoTeyo.auth.IUserBusiness;
-import com.iw3.tpfinal.grupoTeyo.auth.User;
+import com.iw3.tpfinal.grupoTeyo.auth.model.business.interfaces.IUserAuthBusiness;
+import com.iw3.tpfinal.grupoTeyo.auth.model.User;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomAuthenticationManager implements AuthenticationManager {
 
-	private IUserBusiness userBusiness;
+	private IUserAuthBusiness userBusiness;
 
 	private PasswordEncoder pEncoder;
 
-	public CustomAuthenticationManager(PasswordEncoder pEncoder, IUserBusiness userBusiness) {
+	public CustomAuthenticationManager(PasswordEncoder pEncoder, IUserAuthBusiness userBusiness) {
 		this.pEncoder = pEncoder;
 		this.userBusiness = userBusiness;
 	}

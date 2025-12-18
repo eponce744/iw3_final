@@ -4,7 +4,7 @@ package com.iw3.tpfinal.grupoTeyo.auth.events;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.iw3.tpfinal.grupoTeyo.auth.User;
+import com.iw3.tpfinal.grupoTeyo.auth.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 

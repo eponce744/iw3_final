@@ -22,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -41,6 +42,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @RestController
 @RequestMapping(Constants.URL_INTEGRATION_CLI3 + "/ordenes")
 @Tag(name = "Integración CLI3 - Sistema de carga", description = "Endpoints usados por el sistema de control de carga (CLI3). Los identificadores externos deben enviarse como códigos (string).")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLI3')")
 public class OrdenCli3RestController extends BaseRestController {
 
 	@Autowired

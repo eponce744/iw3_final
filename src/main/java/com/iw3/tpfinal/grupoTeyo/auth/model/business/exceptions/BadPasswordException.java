@@ -1,4 +1,4 @@
-package com.iw3.tpfinal.grupoTeyo.auth;
+package com.iw3.tpfinal.grupoTeyo.auth.model.business.exceptions;
 
 import lombok.Builder;
 import lombok.NoArgsConstructor;

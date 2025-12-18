@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-import com.iw3.tpfinal.grupoTeyo.auth.User;
+import com.iw3.tpfinal.grupoTeyo.auth.model.User;
 import com.iw3.tpfinal.grupoTeyo.auth.custom.CustomAuthenticationManager;
 import com.iw3.tpfinal.grupoTeyo.auth.filters.AuthConstants;
 import com.iw3.tpfinal.grupoTeyo.controllers.BaseRestController;

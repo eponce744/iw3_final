@@ -22,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 		+ "PENDIENTE_PESAJE_INICIAL. Devuelve la contraseña de activación (5 dígitos) y el Id-Orden en header.\n"
 		+ "2) finalizar: registra el pesaje final y devuelve la orden con la conciliación/estado actualizado.\n\n"
 		+ "Notas: las referencias a entidades externas en los payloads (cuando aplicable) se resuelven por código externo (string) en la capa de negocio.")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLI2')")
 public class OrdenCli2RestController {
 
 	@Autowired

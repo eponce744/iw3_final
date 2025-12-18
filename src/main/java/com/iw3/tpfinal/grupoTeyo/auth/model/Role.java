@@ -1,4 +1,4 @@
-package com.iw3.tpfinal.grupoTeyo.auth;
+package com.iw3.tpfinal.grupoTeyo.auth.model;
 
 import java.io.Serializable;
 

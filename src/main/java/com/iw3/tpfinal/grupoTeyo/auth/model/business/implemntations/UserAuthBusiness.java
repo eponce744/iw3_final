@@ -1,8 +1,12 @@
-package com.iw3.tpfinal.grupoTeyo.auth;
+package com.iw3.tpfinal.grupoTeyo.auth.model.business.implemntations;
 
 import java.util.List;
 import java.util.Optional;
 
+import com.iw3.tpfinal.grupoTeyo.auth.model.User;
+import com.iw3.tpfinal.grupoTeyo.auth.model.business.exceptions.BadPasswordException;
+import com.iw3.tpfinal.grupoTeyo.auth.model.business.interfaces.IUserAuthBusiness;
+import com.iw3.tpfinal.grupoTeyo.auth.model.persistence.UserAuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,10 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class UserBusiness implements IUserBusiness {
+public class UserAuthBusiness implements IUserAuthBusiness {
 
 	@Autowired
-	private UserRepository userDAO;
+	private UserAuthRepository userDAO;
 
 
 	@Override
