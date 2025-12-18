@@ -3,7 +3,7 @@ package com.iw3.tpfinal.grupoTeyo.model;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.iw3.tpfinal.grupoTeyo.auth.User;
+import com.iw3.tpfinal.grupoTeyo.auth.model.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
