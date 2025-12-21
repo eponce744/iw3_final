@@ -22,6 +22,19 @@ public class AlarmaBusiness implements IAlarmaBusiness{
 // Básicamente traigo el DAO (Repository) para poder usarlo en los métodos de la interfaz
     @Autowired // Para que Spring lo inyecte automáticamente
     private AlarmaRepository alarmaDAO;
+    
+    @Override
+    public List<Alarma> list() throws BusinessException {
+        
+        try {
+            return alarmaDAO.findAll(); // findAll() ya viene implementado en JpaRepository
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+            // Reenvío la excepción como BusinessException usando el patrón Builder
+        }
+        
+    }
 
     @Override // Método para listar todas las alarmas de una orden específica
     public List<Alarma> listByOrden(long ordenId) throws NotFoundException, BusinessException{ 
@@ -83,5 +96,20 @@ public class AlarmaBusiness implements IAlarmaBusiness{
             // Reenvío la excepción como BusinessException usando el patrón Builder
         }
     }
+    
+    public void updateEstado(long id, Alarma.Estado nuevoEstado)
+            throws NotFoundException, BusinessException {
+
+        Alarma alarma = load(id); // Para validar la existencia de la Alarma
+        alarma.setEstado(nuevoEstado);
+
+        try {
+            alarmaDAO.save(alarma);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+        }
+    }
+
 
 }

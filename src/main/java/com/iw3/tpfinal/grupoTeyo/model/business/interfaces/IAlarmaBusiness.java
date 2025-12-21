@@ -9,6 +9,10 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 
 public interface IAlarmaBusiness {
 
+    // Método para listar todos los alarmas
+	//Deberia ser ejecutable solo por el Admin
+    public List<Alarma> list() throws BusinessException;
+    
     // Método para listar todas las alarmas de una orden específica
     public List<Alarma> listByOrden(long ordenId) throws NotFoundException, BusinessException;
 
@@ -20,4 +24,7 @@ public interface IAlarmaBusiness {
 
     // Método para modificar una alarma existente
     public Alarma update(Alarma alarma) throws NotFoundException, BusinessException;
+    
+    //Método para actualizar el Estado de una Alarma existente
+    public void updateEstado(long id, Alarma.Estado nuevoEstado) throws NotFoundException, BusinessException;
 }
