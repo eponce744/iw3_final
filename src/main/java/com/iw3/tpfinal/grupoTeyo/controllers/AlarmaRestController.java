@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +34,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping(Constants.URL_ALARMAS)
 @Tag(name = "Alarma", description = "API de gestión de alarmas")
 @SecurityRequirement(name = "bearerAuth")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPERADOR')")
 public class AlarmaRestController {
 
 	  @Autowired

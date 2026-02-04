@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RequestMapping(Constants.URL_DETALLES)
 @Tag(name = "Detalle", description = "API de gestión de datos de detalle de carga")
 @SecurityRequirement(name = "bearerAuth")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPERADOR')")
 public class DetalleRestController {
 
         //Creo una instancia de la interface de Detalle Business
