@@ -17,6 +17,9 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,6 +47,24 @@ public class ProductoRestController {
         try {
             return new ResponseEntity<>(productoBusiness.list(), HttpStatus.OK);
         }catch(BusinessException e){
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "Listar productos paginados", description = "Devuelve una página de productos, ordenados del más reciente al más antiguo.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista paginada devuelta OK"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
+    @GetMapping(value = "", params = {"page", "size"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> list(
+            @Parameter(description = "Número de página (0..N)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Tamaño de la página") @RequestParam(defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+            return new ResponseEntity<>(productoBusiness.list(pageable), HttpStatus.OK);
+        } catch (BusinessException e) {
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }

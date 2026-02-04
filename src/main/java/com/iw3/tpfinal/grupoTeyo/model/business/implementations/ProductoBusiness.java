@@ -3,6 +3,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.iw3.tpfinal.grupoTeyo.model.Producto;
@@ -33,6 +35,16 @@ public class ProductoBusiness implements IProductoBusiness{
             // Reenvío la excepción como BusinessException usando el patrón Builder
         }
         
+    }
+
+    @Override
+    public Page<Producto> list(Pageable pageable) throws BusinessException {
+        try {
+            return productoDAO.findAll(pageable);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).message(e.getMessage()).build();
+        }
     }
 
     @Override

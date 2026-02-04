@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @Service
 @Slf4j
 public class UserBusiness implements IUserBusiness {
@@ -24,6 +27,15 @@ public class UserBusiness implements IUserBusiness {
     public List<User> list() throws BusinessException {
         try {
             return userDAO.findAll();
+        } catch (Exception e) {
+            throw BusinessException.builder().ex(e).build();
+        }
+    }
+
+    @Override
+    public Page<User> list(Pageable pageable) throws BusinessException {
+        try {
+            return userDAO.findAll(pageable);
         } catch (Exception e) {
             throw BusinessException.builder().ex(e).build();
         }

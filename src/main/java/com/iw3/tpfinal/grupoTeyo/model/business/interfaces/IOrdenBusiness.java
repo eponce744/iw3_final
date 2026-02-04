@@ -2,6 +2,9 @@ package com.iw3.tpfinal.grupoTeyo.model.business.interfaces;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.iw3.tpfinal.grupoTeyo.model.Orden;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BadRequestException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
@@ -13,6 +16,9 @@ public interface IOrdenBusiness {
 
     // Método para listar todas las órdenes
     public List<Orden> list() throws BusinessException;
+
+    // Método para listar todas las órdenes paginadas
+    public Page<Orden> list(Pageable pageable) throws BusinessException;
 
     // Método para cargar(o traer) una orden por su ID
     public Orden load(long id) throws NotFoundException, BusinessException;

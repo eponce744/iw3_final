@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 @RestController
 @RequestMapping(Constants.URL_USUARIOS)
 @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -35,6 +39,15 @@ public class UserRestController extends BaseRestController{
     public ResponseEntity<List<User>> list() {
         List<User> users = userBusiness.list();
         return ResponseEntity.ok(users);
+    }
+
+    @SneakyThrows
+    @GetMapping(value = "", params = {"page", "size"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> list(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idUser").descending());
+        return new ResponseEntity<>(userBusiness.list(pageable), HttpStatus.OK);
     }
 
     @SneakyThrows

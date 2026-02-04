@@ -7,8 +7,13 @@ import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface IUserBusiness {
     public List<User> list() throws BusinessException;
+
+    public Page<User> list(Pageable pageable) throws BusinessException;
 
     public User load(long id) throws NotFoundException, BusinessException;
 

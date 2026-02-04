@@ -13,7 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.iw3.tpfinal.grupoTeyo.integration.cli2.model.OrdenCli2SlimV1JsonSerializer;
@@ -62,6 +67,25 @@ public class OrdenRestController {
             return new ResponseEntity<>(ordenBusiness.list(), HttpStatus.OK);
         }catch(BusinessException e){ //Devuelve un standart response
             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "Listar órdenes paginadas", description = "Devuelve una página de órdenes, ordenadas de más reciente a más antigua.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista paginada devuelta OK"),
+        @ApiResponse(responseCode = "500", description = "Error interno")
+    })
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPERADOR')")
+    @GetMapping(value = "", params = {"page", "size"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> list(
+            @Parameter(description = "Número de página (0..N)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Tamaño de la página") @RequestParam(defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size, Sort.by("fechaRecepcion").descending());
+            return new ResponseEntity<>(ordenBusiness.list(pageable), HttpStatus.OK);
+        } catch (BusinessException e) {
+             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
