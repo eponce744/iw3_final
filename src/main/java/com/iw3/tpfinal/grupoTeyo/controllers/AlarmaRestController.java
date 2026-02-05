@@ -108,10 +108,11 @@ public class AlarmaRestController {
 	    @PutMapping("/{id}/estado")
 	    public ResponseEntity<?> updateEstado(
 	            @PathVariable long id,
-	            @RequestParam Alarma.Estado estado) {
+	            @RequestParam Alarma.Estado estado,
+	            @RequestParam(required = false) String observacion) {
 
 	        try {
-	            alarmaBusiness.updateEstado(id, estado);
+	            alarmaBusiness.updateEstado(id, estado, observacion);
 	            return ResponseEntity.ok().build();
 	        } catch (NotFoundException e) {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

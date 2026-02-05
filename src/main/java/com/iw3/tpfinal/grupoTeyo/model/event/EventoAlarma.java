@@ -11,7 +11,8 @@ public class EventoAlarma extends ApplicationEvent{
 	
 
 	public enum TipoEvento{
-		TEMPERATURA_EXCEDIDA
+		TEMPERATURA_EXCEDIDA,
+        ALARMA_ATENDIDA
 	}
 
 	public EventoAlarma(Object source, TipoEvento tipoEvento) {

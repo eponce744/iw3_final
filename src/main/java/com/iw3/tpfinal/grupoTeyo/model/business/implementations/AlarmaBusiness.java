@@ -4,13 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.iw3.tpfinal.grupoTeyo.auth.model.User;
 import com.iw3.tpfinal.grupoTeyo.model.Alarma;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.BusinessException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.FoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.exceptions.NotFoundException;
 import com.iw3.tpfinal.grupoTeyo.model.business.interfaces.IAlarmaBusiness;
+import com.iw3.tpfinal.grupoTeyo.model.event.EventoAlarma;
 import com.iw3.tpfinal.grupoTeyo.model.persistence.AlarmaRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +26,9 @@ public class AlarmaBusiness implements IAlarmaBusiness{
 // Básicamente traigo el DAO (Repository) para poder usarlo en los métodos de la interfaz
     @Autowired // Para que Spring lo inyecte automáticamente
     private AlarmaRepository alarmaDAO;
+    
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
     
     @Override
     public List<Alarma> list() throws BusinessException {
@@ -97,14 +104,37 @@ public class AlarmaBusiness implements IAlarmaBusiness{
         }
     }
     
-    public void updateEstado(long id, Alarma.Estado nuevoEstado)
+    public void updateEstado(long id, Alarma.Estado nuevoEstado, String observacion)
             throws NotFoundException, BusinessException {
 
         Alarma alarma = load(id); // Para validar la existencia de la Alarma
+        
+        boolean isResolving = alarma.getEstado() != Alarma.Estado.ATENDIDA && nuevoEstado == Alarma.Estado.ATENDIDA;
+        
         alarma.setEstado(nuevoEstado);
+        
+        if (observacion != null) {
+        	alarma.setObservacion(observacion);
+        }
+        
+        if (isResolving) {
+        	try {
+        		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        		if (principal instanceof User) {
+        			alarma.setUsuario((User) principal);
+        		}
+        	} catch (Exception e) {
+        		log.error("No se pudo obtener el usuario de la sesión para asignar a la alarma", e);
+        	}
+        }
 
         try {
             alarmaDAO.save(alarma);
+            
+            if (isResolving) {
+            	eventPublisher.publishEvent(new EventoAlarma(alarma, EventoAlarma.TipoEvento.ALARMA_ATENDIDA));
+            }
+
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw BusinessException.builder().ex(e).message(e.getMessage()).build();

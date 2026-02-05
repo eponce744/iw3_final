@@ -43,11 +43,16 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping(Constants.URL_ORDENES)
 @Tag(name = "Orden", description = "API de gestión de órdenes y ciclo de carga (puntos 1–5).")
 @SecurityRequirement(name = "bearerAuth")
 public class OrdenRestController {
+
+    private final Logger log = LoggerFactory.getLogger(OrdenRestController.class);
 
     //Creo una instancia de la interface de Orden Business
     @Autowired
@@ -55,37 +60,32 @@ public class OrdenRestController {
     @Autowired
     private IStandartResponseBusiness response;
 
-    @Operation(summary = "Listar órdenes", description = "Devuelve la lista completa de órdenes.")
+    @Operation(summary = "Listar órdenes (paginadas o completas)", description = "Devuelve una lista de órdenes. Si se provee 'page', devuelve paginado. Si no, devuelve la lista completa.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Lista devuelta OK"),
         @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPERADOR')")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> list(){
-        try {
-            return new ResponseEntity<>(ordenBusiness.list(), HttpStatus.OK);
-        }catch(BusinessException e){ //Devuelve un standart response
-            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Operation(summary = "Listar órdenes paginadas", description = "Devuelve una página de órdenes, ordenadas de más reciente a más antigua.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Lista paginada devuelta OK"),
-        @ApiResponse(responseCode = "500", description = "Error interno")
-    })
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPERADOR')")
-    @GetMapping(value = "", params = {"page", "size"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> list(
-            @Parameter(description = "Número de página (0..N)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Tamaño de la página") @RequestParam(defaultValue = "10") int size) {
+            @Parameter(description = "Número de página (0..N). Si se omite, devuelve lista completa.") @RequestParam(required = false) Integer page,
+            @Parameter(description = "Tamaño de la página. Por defecto 10.") @RequestParam(required = false) Integer size) {
         try {
-            Pageable pageable = PageRequest.of(page, size, Sort.by("fechaRecepcion").descending());
-            return new ResponseEntity<>(ordenBusiness.list(pageable), HttpStatus.OK);
+            if (page != null) {
+                int pageSize = (size != null) ? size : 10;
+                log.info("Solicitando listado paginado: page={}, size={}", page, pageSize);
+                Pageable pageable = PageRequest.of(page, pageSize, Sort.by("fechaRecepcion").descending());
+                // Podrías devolver directamente el contenido si quieres simular una lista simple, 
+                // pero se pierde la data de paginación.
+                // return new ResponseEntity<>(ordenBusiness.list(pageable).getContent(), HttpStatus.OK);
+                return new ResponseEntity<>(ordenBusiness.list(pageable), HttpStatus.OK);
+            } else {
+                log.info("Solicitando listado completo de órdenes");
+                return new ResponseEntity<>(ordenBusiness.list(), HttpStatus.OK);
+            }
         } catch (BusinessException e) {
-             return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
+            log.error("Error al listar órdenes: {}", e.getMessage());
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), 
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

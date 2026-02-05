@@ -31,7 +31,9 @@ public class EventoAlarmaListener implements ApplicationListener<EventoAlarma> {
 	public void onApplicationEvent(EventoAlarma event) {
 		if (event.getTipoEvento().equals(EventoAlarma.TipoEvento.TEMPERATURA_EXCEDIDA) && event.getSource() instanceof Detalle) {
 			handleAlarma((Detalle) event.getSource());
-		}
+		} else if (event.getTipoEvento().equals(EventoAlarma.TipoEvento.ALARMA_ATENDIDA) && event.getSource() instanceof Alarma) {
+            handleAlarmaAtendida((Alarma) event.getSource());
+        }
 	}
 
 	@Autowired
@@ -64,7 +66,6 @@ public class EventoAlarmaListener implements ApplicationListener<EventoAlarma> {
         dto.setEstado(alarma.getEstado());
         dto.setTemperaturaRegistrada(alarma.getTemperaturaRegistrada());
         dto.setFecha(alarma.getFecha());
-        //dto.setThresholdTemperature(alarma.getOrder().getProduct().getThresholdTemperature()); //todo tira null pointer ver que onda
         dto.setObservacion(alarma.getObservacion() != null ? alarma.getObservacion() : null);
         dto.setUsuario(
                 alarma.getUsuario() != null && alarma.getUsuario().getUsername() != null
@@ -114,4 +115,27 @@ public class EventoAlarmaListener implements ApplicationListener<EventoAlarma> {
             log.error(e.getMessage(), e);
         }
 	}
+
+    private void handleAlarmaAtendida(Alarma alarma) {
+        // Preparamos el DTO para el WebSocket
+        EventoAlarmaDTO dto = new EventoAlarmaDTO();
+        dto.setId(alarma.getId());
+        dto.setOrdenId(alarma.getOrden().getId());
+        dto.setEstado(alarma.getEstado());
+        dto.setTemperaturaRegistrada(alarma.getTemperaturaRegistrada());
+        dto.setFecha(alarma.getFecha());
+        dto.setObservacion(alarma.getObservacion());
+        dto.setUsuario(
+                alarma.getUsuario() != null ? alarma.getUsuario().getUsername() : "Desconocido"
+        );
+
+        // Notificamos al mismo tópico que usan los frontend para escuchar cambios en esta orden
+        String topic = "/topic/alarmas/orden/" + alarma.getOrden().getId();
+        try {
+            messagingTemplate.convertAndSend(topic, dto);
+            log.info("Notificación WebSocket enviada: Alarma {} ATENDIDA por usuario {}", alarma.getId(), dto.getUsuario());
+        } catch (Exception e) {
+            log.error("Fallo el envío de la notificación WebSocket para Alarma Atendida", e);
+        }
+    }
 }

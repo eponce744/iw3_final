@@ -26,5 +26,5 @@ public interface IAlarmaBusiness {
     public Alarma update(Alarma alarma) throws NotFoundException, BusinessException;
     
     //Método para actualizar el Estado de una Alarma existente
-    public void updateEstado(long id, Alarma.Estado nuevoEstado) throws NotFoundException, BusinessException;
+    public void updateEstado(long id, Alarma.Estado nuevoEstado, String observacion) throws NotFoundException, BusinessException;
 }
