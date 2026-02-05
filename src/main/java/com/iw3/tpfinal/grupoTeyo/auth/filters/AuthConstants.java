@@ -1,7 +1,8 @@
 package com.iw3.tpfinal.grupoTeyo.auth.filters;
 
 public final class AuthConstants {
-	public static final long EXPIRATION_TIME = (60 * 60 * 1000);
+	//public static final long EXPIRATION_TIME = (60 * 60 * 1000); // 1 hora
+	public static final long EXPIRATION_TIME = (12 * 60 * 60 * 1000); // 12 horas
 	public static final String SECRET = "MyVerySecretKey";
 	
 	public static final String AUTH_HEADER_NAME = "Authorization";
