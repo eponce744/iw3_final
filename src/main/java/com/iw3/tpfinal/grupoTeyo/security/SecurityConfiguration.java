@@ -41,7 +41,11 @@ public class SecurityConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                    .allowedOrigins("http://localhost:5173") // Puerto de Vite
+					.allowedOrigins(
+			"http://localhost:5173",       // entorno local
+						"https://fluxgas.mooo.com:5173", // VM accediendo por puerto
+						"https://fluxgas.mooo.com"       // VM si usamos puerto 80 por defecto
+					)
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                     .allowedHeaders("*")
                     .allowCredentials(true);
