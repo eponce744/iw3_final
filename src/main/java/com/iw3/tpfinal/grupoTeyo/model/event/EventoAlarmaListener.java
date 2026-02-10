@@ -109,7 +109,7 @@ public class EventoAlarmaListener implements ApplicationListener<EventoAlarma> {
         );
 
         try {
-            emailBusiness.sendSimpleMessage("moyomaxi2003@gmail.com", subject, mensaje);
+            emailBusiness.sendSimpleMessage("fluxgasiw3@gmail.com", subject, mensaje);
             log.info("Enviando mensaje '{}'", mensaje);
         } catch (BusinessException e) {
             log.error(e.getMessage(), e);
